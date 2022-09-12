@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-text = 'hello world'
+text = 'hello world'*2
 
 x = np.arange(0, 100)
 y = np.sin(x/10)
