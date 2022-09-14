@@ -1,0 +1,4 @@
+#ignore the extra LaTeX files
+*.aux
+*.log
+*.synctex.gz
