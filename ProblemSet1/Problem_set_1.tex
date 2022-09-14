@@ -50,6 +50,28 @@ Minimizing with respect to $\delta$:
 \[\delta^5 = \frac{15}{2}\frac{|f(x)|\cdot \epsilon}{f'''''(x)}\]
 So the ideal value of $\delta$ should be 
 \[\boxed{ \delta = \left(\frac{15}{2}\frac{|f(x)|\cdot \epsilon}{f'''''(x)}\right)^{1/5} }\text{ .}\]
+For $f = e^{x}$, the ideal step should be approximately
+\[\delta \approx \left(\frac{15}{2}\frac{e^x}{e^x}\cdot10^{-16}\right)^{1/5} = \left(\frac{15}{2}\cdot10^{-16}\right)^{1/5} =  9.441\cdot10^{-4} \]
+As shown in figure 1, the calculated value of $\delta$ performs better than steps sizes of an order of magnitude higher and lower.
+\begin{figure}[h]
+	\caption{Step size error comparison $f(x) = e^x$}
+	\centering
+	\includegraphics[scale=0.5]{Q1b1}
+	\includegraphics[scale=0.5]{Q1b2}
+\end{figure}
+\\
+For $f(x) = e^{0.01x}$, the ideal step size should be approximately
+\[\delta \approx \left(\frac{15}{2}\frac{e^{0.01x}}{10^{-10}e^{0.01x}}\cdot 10^{-16} \right)^{1/5} = \left(\frac{15}{2} \cdot 10^{-6} \right)^{1/5} = 9.441\cdot 10^{-2} \]
+As shown in Figure 2, this is also approximately the correct step size as it outperforms steps sizes of an order of magnitude larger and smaller.
+\begin{figure}[h]
+	\caption{Step size error comparison $f(x) = e^{0.01x}$}
+	\centering
+	\includegraphics[scale=0.5]{Q1b3}
+	\includegraphics[scale=0.5]{Q1b4}
+\end{figure}
+
+
+
 
 \section{}
 

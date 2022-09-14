@@ -2,3 +2,7 @@
 *.aux
 *.log
 *.synctex.gz
+
+#ignore pictures for now, they'll be in the pdf anyways.
+#may want to change this if we ever work with image data.
+*.png
