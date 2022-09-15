@@ -70,10 +70,33 @@ As shown in Figure 2, this is also approximately the correct step size as it out
 	\includegraphics[scale=0.5]{Q1b4}
 \end{figure}
 
-
-
-
+\newpage
 \section{}
+\textbf{My numerical differentiator function pseudocode:}\\
+Finding optimal step size $dx$:
+\begin{itemize}
+	\item To get around the proper order of magnitude, evaluate the derivative for $dx \in \{10^{-16}, 10^{-15}, 10^{-14}, ..., 10^{-1}, 1 \}$.
+	\item Since I expect less variation near the optimal $dx$, evaluate differences of derivatives for adjacent $dx$ values and choose $dx$ corresponding to smallest difference.
+	\item Refine the optimal $dx$ guess by repeating the previous steps above with $dx$ from the interval centered around the best guess $\{dx\cdot10^-1, ... dx, ... dx\cdot10\}$. I take the best $dx$ at this point as good enough to proceed.
+	\begin{itemize}
+		\item For array inputs of $x$ , the derivative is evaluated at all points of $x$ with all values of $dx$. Differences between derivatives for adjacent $dx$ values are calculated, then summed along each value of $x$ to get an array of the differences for each $dx$. The best $dx$ is chosen in the same manner, from the  $dx$ corresponding to the minimum difference.
+	\end{itemize}
+\end{itemize}
+Evaluating the derivative:
+\begin{itemize}
+	\item The numerical derivative output is calculated using the central derivative.formula using the chosen best $dx$ at each point in $x$.
+\end{itemize}
+Estimating Error
+\begin{itemize}
+	\item Error estimation is calculated according to the formula for the error of the central derivative: $R \approx \frac{f(x)\epsilon}{dx} + \frac{1}{6}f'''(x)dx^2$ where $\epsilon = 10^{-16}$ is the rounding error.
+	\begin{itemize}
+		\item The third derivative for the error formula is crudely calculated at each point of the function:
+		\item For each point in $x$, I calculate $f'(x\pm2dx)$ and use these values to get $f''(x+dx) = \frac{f'(x+2dx) - f'(x)}{2dx}$ and $f''(x-dx) = \frac{f'(x) - f'(x-2dx)}{2dx}$. Finally, the value of $f'''(x) = \frac{f''(x+dx) - f''(x-dx)}{2dx}$ is used to evaluate the formula for $R$.
+	\end{itemize}
+\end{itemize}
+The code for this question is in the file named "Q2\_numerical\_differentiator.py". Testing on the function $f(x) = e^x$ results in actual error of order $10^{-11}$ or lower. The error estimated by the function is within one order of magnitude to the actual error and generally on the same order of magnitude or even closer.
+
+
 
 
 
