@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def centraldiff(fun, x, dx):
     #central derivative formula
@@ -59,14 +60,37 @@ def ndiff(fun, x, full=False):
 
 
 #example test
-deriv, dx, err = ndiff(np.exp, np.linspace(-10, 10, 20), full=True)
-truth = np.exp(np.linspace(-10, 10, 20))
+deriv, dx, err = ndiff(np.exp, np.linspace(-10, 10, 200), full=True)
+truth = np.exp(np.linspace(-10, 10, 200))
 trutherr = np.abs(truth - deriv)
 
-print('dx', dx)
-print()
-print('derivative ... estimated error ... True error')
-print()
-for i in range(len(deriv)):
-    print(deriv[i], '...', err[i], '...', trutherr[i])
+# print('dx', dx)
+# print()
+# print('derivative ... estimated error ... True error')
+# print()
+# for i in range(len(deriv)):
+#     print(deriv[i], '...', err[i], '...', trutherr[i])
+
+plt.figure()
+plt.plot(np.linspace(-10, 10, 200), deriv, label='Numerical derivative')
+plt.plot(np.linspace(-10, 10, 200), truth, '--', label=r"$f'(x) = e^x$")
+plt.xlabel(r'$x$')
+plt.ylabel(r"$f'(x)$")
+plt.title(r'Derivative of $f(x)=e^x$')
+plt.legend()
+plt.show()
+
+deriv = ndiff(np.sin, np.linspace(-10, 10, 200), full=False)
+truth = np.cos(np.linspace(-10, 10, 200))
+
+plt.figure()
+plt.plot(np.linspace(-10, 10, 200), deriv, label='Numerical derivative')
+plt.plot(np.linspace(-10, 10, 200), truth, '--', label=r"$f'(x)=\cos{x}$")
+plt.xlabel(r'$x$')
+plt.ylabel(r"$f'(x)$")
+plt.title(r'Derivative of $f(x)=\sin{x}$')
+plt.legend()
+plt.show()
+
+
 

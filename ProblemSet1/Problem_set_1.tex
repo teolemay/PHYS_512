@@ -94,7 +94,18 @@ Estimating Error
 		\item For each point in $x$, I calculate $f'(x\pm2dx)$ and use these values to get $f''(x+dx) = \frac{f'(x+2dx) - f'(x)}{2dx}$ and $f''(x-dx) = \frac{f'(x) - f'(x-2dx)}{2dx}$. Finally, the value of $f'''(x) = \frac{f''(x+dx) - f''(x-dx)}{2dx}$ is used to evaluate the formula for $R$.
 	\end{itemize}
 \end{itemize}
-The code for this question is in the file named "Q2\_numerical\_differentiator.py". Testing on the function $f(x) = e^x$ results in actual error of order $10^{-11}$ or lower. The error estimated by the function is within one order of magnitude to the actual error and generally on the same order of magnitude or even closer.
+The code for this question is in the file named "Q2\_numerical\_differentiator.py". Testing on the function $f(x) = e^x$ results in actual error of order $10^{-11}$ or lower. The error estimated by the function is within one order of magnitude to the actual error and generally on the same order of magnitude or even closer. Examples of the function output for $e^x$ and $\sin{x}$ in Figure 3.
+
+\begin{figure}[h]
+	\caption{Numerical differentiator sample results}
+	\includegraphics[scale=0.5]{Q2_1}
+	\includegraphics[scale=0.5]{Q2_2} 
+\end{figure}
+
+\newpage
+\section{}
+
+
 
 
 
