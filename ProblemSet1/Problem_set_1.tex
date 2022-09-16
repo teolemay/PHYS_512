@@ -72,6 +72,9 @@ As shown in Figure 2, this is also approximately the correct step size as it out
 
 \newpage
 \section{}
+For my function, I estimate the ideal derivative step size $dx$ by trying different values of dx and comparing the difference in derivatives calculated for close values of $dx$. Near the best value of $dx$ the error is minimized, so other values around the best value will also have relatively small error compared to $dx$ far from the ideal value. Therefore, I calculate the optimal dx by choosing the value around which there is the least change in the numerical derivative. My complete numerical differentiation function is described below.\\
+\\
+
 \textbf{My numerical differentiator function pseudocode:}\\
 Finding optimal step size $dx$:
 \begin{itemize}
@@ -104,9 +107,27 @@ The code for this question is in the file named "Q2\_numerical\_differentiator.p
 
 \newpage
 \section{}
+My interpolation function uses the SciPy's cubic spline interpolation implementation (scipy.interpolate.CubicSpline) with natural boundary conditions (second derivative is 0 at the endpoints of the interval). The SciPy implementation takes the given data points as input, and computes a cubic spline for the points with the specified boundary conditions. The output is a SciPy function that computes the spline's corresponding polynomial at any given point within the limits of the input data. (https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.CubicSpline.html)\\
+\\
+My function estimates the error of the cubic spline by comparing it to a cubic polynomial interpolation since the cubic spline is simply a piecewise collection of cubic polynomial interpolations with special conditions on their derivatives that tend to make it a better fit. Therefore, I expect the actual error to be generally less than or equal to that of a simple cubic polynomial interpolation. Assuming that the input data function is 4 times differentiable, the cubic polynomial interpolation's error over 4 points is:
+\[f(x) - P_3(x) = \frac{1}{4!}f''''(\xi_x)\prod_{i=1}^{4}(x-x_i)\] 
+for some point $\xi_x$ within the interval of the four points \footnote{Stoer, J., and Bulirsch, R. 2002, Introduction to Numerical Analysis, 3rd ed. (New York: Springer), \S 2.1.4.1}. In this case, the fourth derivative is computed by repeatedly using the forward derivative formula using the known first derivatives at the four points around each point of interpolation. For example: if the cubic polynomial interpolation uses the points $\{x_a, x_b, x_c, x_d\}$ and $f'(x)$ is known at all points, then
+\[f''(x_b) \approx \frac{f'(x_b) - f'(x_a)}{x_b-x_a}\]
+\[f''(x_c) \approx \frac{f'(x_c) - f'(x_b)}{x_c-x_b}\]
+\[f''(x_d) \approx \frac{f'(x_d) - f'(x_c)}{x_d-x_c}\]
+\[f'''(x_c) \approx \frac{f''(x_c) - f''(x_b)}{x_c-x_b}\]
+\[f'''(x_d) \approx \frac{f''(x_d) - f''(x_c)}{x_d-x_c}\]
+\[f''''(x_d) \approx \frac{f'''(x_d) - f'''(x_c)}{x_d-x_c}\]
+This is a very crude calculation of the fourth derivative and it always uses the fourth derivative at the rightmost point of the interval instead of choosing $\xi_x$ to maximize the error.\\
+\\
+Figure 4 shows the interpolation over the dataset, as well as the error. The interpolation follows the data very closely, which is consistent with the estimated error being small at most points. There is also a large spike in the magnitude of the estimated error near the sharp "elbow" curve in the data, which is logical as the smooth splines will imperfectly represent the sharp change. The code for this question is in the file named "Q3\_lakeshore\_interp.py".
+\begin{figure}
+	\caption{Interpolation function results}
+	\includegraphics[scale=0.5]{Q3_1}
+	\includegraphics[scale=0.5]{Q3_2}
+\end{figure}
 
-
-
+\section{}
 
 
 
