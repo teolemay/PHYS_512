@@ -128,11 +128,33 @@ Figure 4 shows the interpolation over the dataset, as well as the error. The int
 \end{figure}
 
 \section{}
-
-
-
-
-
+The interpolations were performed using 5 evenly spaced points in the interval $[-\pi/2, pi/2]$. The polynomial fit was computed to over the whole interval to 4th order --- the highest order possible for the number of points --- using "numpy.polyfit". The cubic spline was computed using "scipy.interpolate.CubicSpline". The rational function interpolation was calculated using the code example from the lecture slides ("interpolate\_integrate.pdf"). Code for the $\cos{x}$ interpolations is in the file named "Q4\_cos.py".\\
+\\
+As shown in figure 5, all three methods have similar mean error on the order of $10^{-4}$ to $10^{-3}$, with the polynomial interpolation having the lowest mean error of all.
+\begin{figure}[h]
+	\caption{Interpolations of $\cos(x)$}
+	\centering
+	\includegraphics[scale=0.5]{Q4cospoly}
+	\includegraphics[scale=0.5]{Q4cosspline}
+	\includegraphics[scale=0.5]{Q4cosrat}
+\end{figure}
+The same procedure was repeated with the Lorentzian function $f(x) = \frac{1}{1+x^2}$, using 5 evenly spaced points on the interval $[-1, 1]$. Since the Lorentzian function is a rational function by definition, if the rational function interpolation works properly, then the interpolated function should be within some rounding error of the Lorentzian itself. Therefore, the mean error for the rational function interpolation should be equal to 0 within rounding error. This hypothesis is confirmed in figure 6 where the rational function interpolation has mean error on the order of $10^{-16}$ which is the same order as rounding error for python. Both the polynomial and the cubic spline interpolations have much larger mean error on the order of $10^{-3}$.
+\begin{figure}[h]
+	\caption{Lorentzian function interpolations}
+	\centering
+	\includegraphics[scale=0.5]{Q4lorpoly}
+	\includegraphics[scale=0.5]{Q4lorspline}
+	\includegraphics[scale=0.5]{Q4lorrat}
+\end{figure}
+Increasing the order of the rational function interpolation to $n=4$, $m=5$, and calculating using 8 points, gives an interpolation that completely fails to match with the Lorentzian function. The higher order rational function is saved however by changing "np.linalg.inv" to "np.linalg.pinv" in the fitting function (figure 7).\\
+\\
+The break down of the rational function interpolation with higher orders can be explained by the fact that the rational function will add unneeded higher order terms in the numerator and denominator. These terms would "cancel" analytically, but since they go to zero much faster than the required lower order terms, they introduce random rounding error if they reach the machine precision. This random error is propagated to the rest of the coefficients during the matrix inverse. Swapping "np.linalg.inv" for "np.linalg.pinv" solves the issue by neglecting the very small values in a matrix when taking the inverse, such that they do not affect the final outcome.
+\begin{figure}[h]
+	\caption{Higher order rational function interpolation of the Lorentzian}
+	\centering
+	\includegraphics[scale=0.5]{Q4badlorentz}
+	\includegraphics[scale=0.5]{Q4goodlorentz}
+\end{figure}
 
 
 \end{document}
