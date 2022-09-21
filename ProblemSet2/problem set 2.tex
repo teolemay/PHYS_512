@@ -1,0 +1,31 @@
+\documentclass{article}
+
+%opening
+\title{PHYS 512 Problem Set 2}
+\author{Teophile Lemay, 281081252}
+\date{}
+\usepackage[left=2cm, right=2cm, top=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\newcommand{\<}[1]{\left\langle #1 \right\rangle }
+
+
+\begin{document}
+	\maketitle
+	
+\section{}
+The electric field at a point near a uniformly charged spherical shell can be calculated by integrating over infinitesimal rings to make up the sphere. The electric field due to each ring is calculated starting from Coulomb's law $E = \frac{kQ}{r^2}$. Using the variables from the ring diagram in Figure 1, integrating over the circumference of the ring, given a uniform line charge density $\rho$ gives $E = \frac{k2\pi \lambda R'}{r^2}$. However, due to the radial symmetry of the ring, only the $z$ component of the electric field will remain for a point along the ring's axis so
+\[E_{ring} = \frac{k2\pi\rho R'}{r^2} \cos{\theta} = \frac{k2\pi\rho R'}{r^2}\frac{z}{r} = \frac{k2\pi\rho R'z}{r^3}\text{ .}\]
+Finally, $r$ can be expressed in terms of $z$ and $R'$:
+\[E_{ring} = \frac{k2\pi\rho R'z}{\left(z^2 + R'^2\right)^{3/2}} \text{ .}\]
+\begin{figure}[h]
+	\caption{Charged ring diagram}
+	\centering
+	\includegraphics[scale=0.5]{ringdiagram}
+\end{figure}
+
+\end{document}
