@@ -32,7 +32,14 @@ Now, the integral over the sphere can be evaluated by taking the sum of rings ma
 \[z' = z + R\cos\theta\]
 \[E_{ring} = E_{ring}(\theta, z, R) = \frac{k2\pi\rho R\sin{\theta}(z+R\cos(\theta)}{\left((z+R\cos{\theta})^2 + (R\sin{\theta})^2\right)^{3/2}}\]
 \[E_z = \int_{0}^{\pi}  d\theta E_{ring}(\theta, z, R)\]
-
+Figure 2 shows the results of the numerical integration of the electric field at a point relative to the charged sphere using SciPy's "scipy.integrate.quad" function and my adaptive step size integrator (see problem 2). For simplicity, the integrals were calculated for a sphere of radius 1, and the outputs are in units of $E/k\rho$ since the charge of the sphere is arbitrary. As shown in the plots of $E$ and the difference between the functions, both numerical integrators produce very similar results. Indeed, the maximum difference between the results is on the order of $10^{-8}$, and occurs at $z=1$, where there should be a singularity in $E$ at the surface of the sphere. Despite the maximum difference occurring at the expected singularity, both functions perform nearly identically, simply producing a sharp peak around $z=R=1$.
+\begin{figure}[h]
+	\caption{Electric Field at point $z$ relative to center of charged sphere of radius 1}
+	\centering
+	\includegraphics[scale=0.5]{quad}
+	\includegraphics[scale=0.5]{myfunction}
+	\includegraphics[scale=0.5]{difference}
+\end{figure}
 
 \section{}
 My adaptive step size integration function uses Simpson's rule. For the given interval $[a, b]$, the midpoint $m = (a+b)/2$ is calculated and the function is evaluated at the start, midpoint, and end of the interval. These values are used to compute the integral from $a$ to $b$ using Simpson's rule. Next, the secondary midpoints ($m' = (a+m)/2$ and $m'' = (m+b)/2$) are calculated and the function is also evaluated at these points. With these points, the integral is calculated again using Simpson's rule, but with two smaller intervals, and compared to the previous result. If the difference of the two intervals is within a set tolerance ($\epsilon = 10^{-8}$ was chosen arbitrarily), then the integral is returned (the two interval result is always taken since error for Simpson's rule is proportional to $dx^5$ so smaller intervals will produce smaller error).\\

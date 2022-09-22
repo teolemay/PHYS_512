@@ -7,7 +7,7 @@ from Q2_adaptive_integration import adaptive_integrator
 # k = 1e-8 # approximately 1/(4*eps_0)
 # rho = 1 #surface charge density
 
-R = 2
+R = 1
 zvals = np.linspace(0, 8, 1001)
 
 Equad = np.empty(zvals.shape, dtype=np.float64) 
@@ -25,15 +25,21 @@ for i, z in enumerate(zvals):
 
 plt.figure()
 plt.plot(zvals, Equad)
-plt.title('scipy.integrate.quad')
+plt.title('Scipy.integrate.quad')
 plt.xlabel('z')
 plt.ylabel(r'$\frac{E}{k\rho}$')
 
 plt.figure()
 plt.plot(zvals, Eadaptive)
-plt.title('My adaptive step size function')
+plt.title('Adaptive step size integrator')
 plt.xlabel('z')
 plt.ylabel(r'$\frac{E}{k\rho}$')
+
+plt.figure()
+plt.plot(zvals, np.abs(Equad - Eadaptive))
+plt.title('Difference between integrals')
+plt.xlabel('z')
+plt.ylabel('Difference (absolute value)')
 
 plt.show()
 

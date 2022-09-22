@@ -8,7 +8,7 @@ def simpson_integration(startval, midval, endval, dx):
 
 def adaptive_integrator(fun, a, b, extra=None):
     #set up parameters
-    tol = 1e-8 
+    tol = 1e-8
 
     #need to calculate simpson's rule at least twice to check tolerance
     #so set up all the midpoints: (a-mid-b); (a-mid1-mid), (mid-mid2-b)
