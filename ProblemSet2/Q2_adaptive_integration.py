@@ -8,8 +8,7 @@ def simpson_integration(startval, midval, endval, dx):
 
 def adaptive_integrator(fun, a, b, extra=None):
     #set up parameters
-    tol = 1e-7 
-    singularity = 1e9
+    tol = 1e-8 
 
     #need to calculate simpson's rule at least twice to check tolerance
     #so set up all the midpoints: (a-mid-b); (a-mid1-mid), (mid-mid2-b)
@@ -20,7 +19,6 @@ def adaptive_integrator(fun, a, b, extra=None):
     #calculate initial required function values
     if extra == None:
         extra = {
-            'numcalls':1,
             a:fun(a),
             b:fun(b),
             mid:fun(mid),
@@ -29,16 +27,18 @@ def adaptive_integrator(fun, a, b, extra=None):
         }
     #calculate any new required function calls
     else:
-        if extra['numcalls'] > singularity:
-            print('Too many function calls. Probably a singularity...')
-        else:
-            extra['numcalls'] += 1
         extra[mid1] = fun(mid1)
         extra[mid2] = fun(mid2)
         #all the other points are already known
+    
+    dx = np.abs(b-a)
+    #want to stop integration before we get rounding error in the intervals
+    if dx/2 < 1e-15:
+        print('Integration stopped. dx too small - probably a singularity...')
+        return None
 
-    int1 = simpson_integration(extra[a], extra[mid], extra[b], np.abs(b-a))
-    int2 = simpson_integration(extra[a], extra[mid1], extra[mid], np.abs(mid-a)) + simpson_integration(extra[mid], extra[mid2], extra[b], np.abs(b-mid))
+    int1 = simpson_integration(extra[a], extra[mid], extra[b], dx)
+    int2 = simpson_integration(extra[a], extra[mid1], extra[mid], dx/2) + simpson_integration(extra[mid], extra[mid2], extra[b], dx/2)
     if np.abs(int1 - int2) < tol:
         return int2
     else:

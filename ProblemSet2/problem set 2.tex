@@ -27,16 +27,19 @@ Finally, $r$ can be expressed in terms of $z$ and $R'$:
 	\centering
 	\includegraphics[scale=0.5]{ringdiagram}
 \end{figure}
-Now, the integral over the sphere can be evaluated by taking the sum of rings making up the sphere for $R'$ the radius of each infinitesimal ring and $z'$ the height of the point relative to each ring.
+Now, the integral over the sphere can be evaluated by taking the sum of rings making up the sphere for $R'$ the radius of each infinitesimal ring and $z'$ the height of the point relative to each ring. Using an azimuth angle $\theta$:
 \[R' = \frac{R}{\sin(\theta))} \]
 \[z' = z + R\cos\theta\]
-\[E_z = \int_{0}^{\pi}  d\theta E_{ring}(\theta, z)\]
+\[E_{ring} = E_{ring}(\theta, z, R) = \frac{k2\pi\rho R\sin{\theta}(z+R\cos(\theta)}{\left((z+R\cos{\theta})^2 + (R\sin{\theta})^2\right)^{3/2}}\]
+\[E_z = \int_{0}^{\pi}  d\theta E_{ring}(\theta, z, R)\]
+
 
 \section{}
-My adaptive step size integration function uses Simpson's rule. For the given interval $[a, b]$, the midpoint $m = (a+b)/2$ is calculated and the function is evaluated at the start, midpoint, and end of the interval. These values are used to compute the integral from $a$ to $b$ using Simpson's rule. Next, the secondary midpoints ($m' = (a+m)/2$ and $m'' = (m+b)/2$) are calculated and the function is also evaluated at these points. With these points, the integral is calculated again using Simpson's rule, but with two smaller intervals, and compared to the previous result. If the difference of the two intervals is within a set tolerance ($\epsilon = 10^{-7}$ was chosen arbitrarily), then the integral is returned (the two interval result is always taken since error for Simpson's rule is proportional to $dx^5$ so smaller intervals will produce smaller error).\\
+My adaptive step size integration function uses Simpson's rule. For the given interval $[a, b]$, the midpoint $m = (a+b)/2$ is calculated and the function is evaluated at the start, midpoint, and end of the interval. These values are used to compute the integral from $a$ to $b$ using Simpson's rule. Next, the secondary midpoints ($m' = (a+m)/2$ and $m'' = (m+b)/2$) are calculated and the function is also evaluated at these points. With these points, the integral is calculated again using Simpson's rule, but with two smaller intervals, and compared to the previous result. If the difference of the two intervals is within a set tolerance ($\epsilon = 10^{-8}$ was chosen arbitrarily), then the integral is returned (the two interval result is always taken since error for Simpson's rule is proportional to $dx^5$ so smaller intervals will produce smaller error).\\
 \\
 If the resulting integrals do not match, my function uses recursion to call itself over each of the sub-intervals:
 \[\int_a^b dx f = \int_a^m dx f + \int_m^b dx f \]
+The recursion is limited by the size of the sub-intervals made by the function. If $dx$ ever becomes smaller than $10^{-15}$ for any three point interval, then rounding error becomes a serious consideration and the function stops.
  
 
 \section{}

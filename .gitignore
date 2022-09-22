@@ -1,3 +1,6 @@
+__pycache__/
+*.py[cod]
+
 #ignore the extra LaTeX files
 *.aux
 *.log
