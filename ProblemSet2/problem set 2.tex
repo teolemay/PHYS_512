@@ -48,8 +48,19 @@ If the resulting integrals do not match, my function uses recursion to call itse
 \[\int_a^b dx f = \int_a^m dx f + \int_m^b dx f \]
 The recursion is limited by the size of the sub-intervals made by the function. If $dx$ ever becomes smaller than $10^{-15}$ for any three point interval, then rounding error becomes a serious consideration and the function stops.
  
-
 \section{}
+\subsection{a)}
+In order to fit a Chebyshev polynomial to $\log_2$ on the interval $[0,5, 1]$, I sampled the function at 51 evenly spaced points on the interval. A Chebyshev polynomial of order 25 was chosen arbitrarily to fit the sampled points using "numpy.polynomial.chebyshev.chebfit". Only the first 8 terms were required to model $\log_2$ with accuracy greater than $10^{-6}$ (see figure 3).
+\begin{figure}[h]
+	\caption{Chebyshev polynomial fit of $\log_2$}
+	\centering
+	\includegraphics[scale=0.5]{chebfit}
+	\includegraphics[scale=0.5]{cheberr}
+\end{figure} 
+
+\subsection{b)}
+The natural logarithm of any real, positive value can be easily expressed in terms of $\log_2$ using logarithm rules:
+\[\ln(x) = \frac{\log_2(x)}{\log_2(e)}\]
 
 
 \end{document}
