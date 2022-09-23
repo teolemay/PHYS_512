@@ -15,6 +15,7 @@ print(cheb)
 orduse = 8
 Xuse = np.linspace(-1, 1, 1001)
 pred = np.polynomial.chebyshev.chebval(Xuse, cheb[:orduse])
+np.savetxt('cheb_log2_coeffs.txt', cheb[:orduse])
 
 #rescaling interval over which fit was evaluated
 Xshow = (Xuse + 3)/4

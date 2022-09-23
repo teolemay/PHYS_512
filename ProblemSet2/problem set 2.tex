@@ -50,7 +50,7 @@ The recursion is limited by the size of the sub-intervals made by the function. 
  
 \section{}
 \subsection{a)}
-In order to fit a Chebyshev polynomial to $\log_2$ on the interval $[0,5, 1]$, I sampled the function at 51 evenly spaced points on the interval. A Chebyshev polynomial of order 25 was chosen arbitrarily to fit the sampled points using "numpy.polynomial.chebyshev.chebfit". Only the first 8 terms were required to model $\log_2$ with accuracy greater than $10^{-6}$ (see figure 3).
+In order to fit a Chebyshev polynomial to $\log_2$ on the interval $[0,5, 1]$, I sampled the function at 51 evenly spaced points on the interval. A Chebyshev polynomial of order 25 was chosen arbitrarily to fit the sampled points using "numpy.polynomial.chebyshev.chebfit". Only the first 8 terms were required to model $\log_2$ with accuracy greater than $10^{-6}$ (see figure 3). The coefficients used were also saved to a text file so that they could be re-used in the second part of the question. Code for this section is found in "Q3\_chebyshev\_log.py"
 \begin{figure}[h]
 	\caption{Chebyshev polynomial fit of $\log_2$}
 	\centering
@@ -60,7 +60,18 @@ In order to fit a Chebyshev polynomial to $\log_2$ on the interval $[0,5, 1]$, I
 
 \subsection{b)}
 The natural logarithm of any real, positive value can be easily expressed in terms of $\log_2$ using logarithm rules:
-\[\ln(x) = \frac{\log_2(x)}{\log_2(e)}\]
+\[\ln(x) = \frac{\log_2(x)}{\log_2(e)}\text{ .}\]
+Next, due to the nature of floating point numbers, I only need to be able to evaluate $\log_2(x)$ for $x \in [0.5, 1]$ since every positive number is represented in terms of a mantissa multiplied by 2 to the power of some exponent. Breaking down $x$ in this way gives
+\[\ln(x) = \frac{\log_2(\text{mantissa}\cdot 2^{\text{exponent}})}{\log_2(e)} = \frac{\log_2(\text{mantissa}) + \text{exponent}\cdot\log_2(2)}{\log_2(2)} = \frac{\log_2(\text{mantissa}) + \text{exponent}}{\log_2(e)}\text{ .}\]
+For all positive real numbers, the mantissa is within the range $[0.5, 1]$ which means that the coefficients calculated from my previous Chebyshev fit will suffice. As shown in figure 4, this method produces a very good model of the natural logarithm, with absolute error less than $10^{-6}$ over the tested interval. The code for this section, including the "mylog2" function is found in the file named "Q3\_chebyshev\_ln.py".
+\begin{figure}[h]
+	\caption{Natural logarithm using Chebyshev fit of $\log_2$}
+	\centering
+	\includegraphics[scale=0.5]{chebln}
+	\includegraphics[scale=0.5]{lnerr}
+\end{figure}
+
+
 
 
 \end{document}
