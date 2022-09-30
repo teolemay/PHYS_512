@@ -144,12 +144,51 @@ where $A$ is a matrix of functions of $x$ and $y$ without unknown parameters, an
 	m_3\\
 	m_4\\
 \end{pmatrix}
+= \vb{A}\vb{m}
 \]
 
 \subsection{b)}
-
+The linear least squares fit was carried out as performed in class (same method as "polyfit\_class.py"), with the corresponding $A$ and $m$ matrices described in part a). The best-fit parameters are
+\begin{align*}
+	a &= 1.667\cdot10^{-4} \text{mm}^{-1} = 1.667\cdot10^{-1} \text{m}^{-1}\\
+	x_0 &= -1.360 \text{mm}\\
+	y_0 &= 58.221 \text{mm}\\
+	z_0 &= -1512.877 \text{mm .}
+\end{align*}
+As shown in figure 5, using the best fit parameters in the paraboloid equation produces a close match to the target position data.
+\begin{figure}[h]
+	\caption{Target positions and best fit paraboloid}
+	\centering
+	\includegraphics[scale=0.7]{dishplot}
+\end{figure}
 
 \subsection{c)}
+Noise is the difference between the recorded data and the true values it should take on if perfect measurements were possible. Assuming that the data is noisy in the $z$ values and that noise in $x$ and $y$ is negligible, I can estimate noise as the difference 
+\[\vb{n} \approx \vb{z} - \vb{A}\vb{m} \]
+\[\vb{N} = \vb{n}\otimes \vb{n} \text{ .}\]
+Error in the fit parameters can then be estimated as 
+\[\sigma_m^2 = \text{diag} \left( \vb{A}^T\vb{N}^{-1}\vb{A} \right)^{-1} \text{ .} \]
+Evaluating this equation gives $\sigma_a = 7\cdot 10^{-17}$. This value is less than rounding error and is probably a very inaccurate estimate of the error for a.\\
+\\
+The focal point $F$ of a 3d paraboloid is related to it's depth $D$ and radius at the rim $R$ by
+\[4FD = R^2\]
+\[F = R^2/4D \text{ .}\]
+Since the dish is oriented such that it extends in the $z$ axis from $z = z_0 \to z=0$, the depth is $D=|z_0|$. Furthermore, at $y=y_0$, the radius of at the rim is derived from
+\[ 0-z_0 = a\left( (x-x_0)^2 + (y_0 - y_0)^2 \right) \text{ .}\]
+Since $z_0$ is negative
+\[ |z_0| = a\left( (x-x_0)^2 \right) = aR^2 \]
+\[R^2 = \frac{-z_0}{a} \text{ .}\]
+Thus
+\[ F =  \frac{|z_0|}{4a|z_0|} = 1/4a \]
+\[\boxed{ F = \frac{1}{4\cdot 1.667\cdot10^{-1}} = 1.4997 \pm 6\cdot10^{-13} \text{m} }\text{ .}\]
+This result is very close to the expected focal length. The expected value is not within the uncertainty of the calculated value, however, the error in a is probably extremely under-estimated so this is expected.
+
+
+
+
+
+
+
 
 
 \end{document}
