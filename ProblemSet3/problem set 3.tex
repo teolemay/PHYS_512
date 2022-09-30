@@ -30,9 +30,9 @@ This algorithm is implemented directly in my "rk4\_step" function which was used
 \[ \dv{y}{x} = \frac{y}{1+x^2} \]
 as shown in figure 1.
 \begin{figure}[h]
-	\caption{basic RK4 integration of $\dv{y}{x} = \frac{y}{1+x^2}$}
+	\caption{basic RK4 integration of $\dv{y}{x} = \frac{y}{1+x^2}$ ($N=200$)}
 	\centering
-	\includegraphics[scale = 0.6]{basicrk4}
+	\includegraphics[scale = 0.7]{basicrk4}
 \end{figure}\\
 \\
 Each of the RK4 terms after $k_1$ can be described as a second order Taylor expansion using the previous term.
@@ -65,12 +65,55 @@ Thus, the leading error term for $y(x+h)$ after 2 RK4 steps of $h/2$ is $\frac{h
 \[y_{h/2}(x+h) = y_{true}(x+h) - \frac{h^5}{16}\dv[4]{}{x}f(y,x) + \mathcal{O}(h^6)\]
 \[y_{h}(x+h) = y_{true}(x+h) - h^5\dv[4]{}{x}f(y,x) + \mathcal{O}(h^6)\]
 \[ \boxed{ \frac{16y_{h/2}(x+h) - y_h(x+h)}{15} = y(x+h) + \mathcal{O}(h^6) } \text{ .}\]
+For each step $H$, this modified RK4 algorithm computes a one step RK4 3 times, requiring 12 function calls compared to the 4 required by a default RK4 implementation. Assuming that function evaluations are the most important complexity consideration, then the modified RK4 should be able to achieve greater accuracy than the one step RK4 while using $N/3$ points. Figure 2 shows a comparison of the expected result, basic RK4 integration with $N=200$ steps, and my modified RK4 integration with $N_{h/2} = 66$ steps. For the given ODE, the root mean squared deviation (RMSD) for the modified RK4 integration is more than 20 times smaller than for the default RK4, with values of $RMSD_{h/2}\approx 1.04 \cdot 10^{-4}$ and $ RMSD_h \approx 2.32 \cdot 10^{-3}$ respectively. All code for this question can be found in the file "Q1\_runge\_kutta.py".s
+\begin{figure}[h]
+	\caption{Modified RK4 integration of $\dv{y}{x} = \frac{y}{1+x^2}$ ($N=66$)}
+	\centering
+	\includegraphics[scale=0.7]{modifiedrk4}
+\end{figure}
 
 
+\section{}
+\subsection{a)}
+A single stage exponential decay relates can be described by the differential equation
+\[\dv{N}{t} = -\alpha N\]
+with solution
+\[N(t) = N_0 e^{-\frac{t}{\tau}\ln{2}}\]
+where $\tau$ is the half-life. Using this description, the decay chain for uranium-238 (figure 3) can be translated into a series of differential equations:
+\begin{align}
+	\dv{N_{U238}}{t} &= -\frac{\ln{2}}{\tau_{U238}}\\
+	\dv{N_{Th234}}{t} &= \frac{\ln{2}}{\tau_{U238}} N_{U238} - \frac{\ln{2}}{\tau_{Th234}} N_{Th234}\\
+	\dv{N_{Pa234}}{t} &= \frac{\ln{2}}{\tau_{Th234}} N_{Th234} - \frac{\ln{2}}{\tau_{Pa234}} N_{{Pa234}}\\
+	\dv{N_{U234}}{t} &= \frac{\ln{2}}{\tau_{Pa234}} N_{Pa234} - \frac{ln2}{\tau_{U234}}N_{U234}\\
+	\dv{N_{Th230}}{t} &= \frac{\ln{2}}{\tau_{U234}}N_{U234} - \frac{\ln{2}}{\tau_{Th230}}N_{Th230}\\
+	\dv{N_{Ra226}}{t} &= \frac{\ln{2}}{\tau_{Th230}}N_{Th230} - \frac{\ln{2}}{\tau_{Ra226}} N_{Ra226}\\
+	\dv{N_{Rn222}}{t} &= \frac{\ln{2}}{\tau_{Ra226}}N_{Ra226} - \frac{\ln{2}}{\tau_{Rn222}}N_{Rn222}\\
+	\dv{N_{Po218}}{t} &= \frac{\ln{2}}{\tau_{Rn222}}N_{Rn222} - \frac{\ln{2}}{\tau_{Po218}}N_{Po218}\\
+	\dv{N_{Pb214}}{t} &= \frac{\ln{2}}{\tau_{Po218}}N_{Po218} - \frac{\ln{2}}{\tau_{Pb214}}N_{Pb214}\\
+	\dv{N_{Bi214}}{t} &= \frac{\ln{2}}{\tau_{Pb214}}N_{Pb214} - \frac{\ln{2}}{\tau_{Bi214}}N_{Bi214}\\
+	\dv{N_{Po214}}{t} &= \frac{\ln{2}}{\tau_{Bi214}}N_{Bi214} - \frac{\ln{2}}{\tau_{Po214}}N_{Po214}\\
+	\dv{N_{Pb210}}{t} &= \frac{\ln{2}}{\tau_{Po214}}N_{Po214} - \frac{\ln{2}}{\tau_{Pb210}}N_{Pb210}\\
+	\dv{N_{Bi210}}{t} &= \frac{\ln{2}}{\tau_{Pb210}}N_{Pb210} - \frac{\ln{2}}{\tau_{Bi210}}N_{Bi210}\\
+	\dv{N_{Po210}}{t} &= \frac{\ln{2}}{\tau_{Bi210}}N_{Bi210} - \frac{\ln{2}}{\tau_{Po210}}N_{Bi210}\\
+	\dv{N_{Pb206}}{t} & = \frac{\ln{2}}{\tau_{Po210}}N_{Po210}
+\end{align}
 
- 
+\begin{figure}[h]
+	\caption{Uranium-238 decay chain (From slides)}
+	\centering
+	\includegraphics[scale=1.5]{decaychain}
+\end{figure}
+
+\subsection{b)}
 
 
+\section{}
+
+\subsection{a)}
+
+\subsection{b)}
+
+\subsection{c)}
 
 
 \end{document}
