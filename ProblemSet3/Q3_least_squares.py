@@ -26,4 +26,4 @@ print('z_0', z_0)
 
 fig = plt.figure()
 ax = plt.axes(fig, projection='3d')
-ax.plot()
+ax.plot()s
