@@ -114,11 +114,40 @@ Figure 4 shows the time evolution of the ratios of Pb-206 to U-238 and Th-230 to
 \end{figure}
 
 \section{}
-
+x,y,z are locations (mm) of targets on dish. Dish shape is expected to be rotationally symmetric paraboloid. 
 \subsection{a)}
-
+The equation for a rotationally symmetric paraboloid in 3 dimensions is 
+\[z-z_0 = a\left((x-x_0)^2 + (y-y_0)^2\right) \]
+\[z = a\left((x-x_0)^2 + (y-y_0)^2\right) + z_0 \text{ .}\]
+In order to solve this equation with a linear least squares fit, I need some new set of parameters such that the equation can be written in the form 
+\[z = Am\] 
+where $A$ is a matrix of functions of $x$ and $y$ without unknown parameters, and $m$ is a vector of tuneable parameters to fit to the data. Expanding the quadratic terms gives
+\[z = ax^2 -2ax_0x + ax_0^2 + ay^2 -2ay_0y + ay_0^2 + z_0\]
+\[z = ax^2 + ay^2 + -2ax_0x -2ay_0y + (ax_0^2 + ay_0^2 + z_0)\]
+\[\vb{z} = 
+\begin{bmatrix}
+	1 & \vb{x} & \vb{y} & \vb{x^2} + \vb{y^2}
+\end{bmatrix}
+\begin{pmatrix}
+	ax_0^2 + ay_0^2 + z_0\\
+	-2ax_0\\
+	-2ay_0\\
+	a
+\end{pmatrix}
+ = 
+\begin{bmatrix}
+	1 & \vb{x} & \vb{y} & \vb{x^2} + \vb{y^2}
+\end{bmatrix} \cdot 
+\begin{pmatrix}
+	m_1\\
+	m_2\\
+	m_3\\
+	m_4\\
+\end{pmatrix}
+\]
 
 \subsection{b)}
+
 
 \subsection{c)}
 
