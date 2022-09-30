@@ -38,6 +38,7 @@ labels = [
     'Pb206'
 ]
 
+
 def decay_fun(x, y, hlives=half_lives):
     ln2 = np.log(2)
     dydx = np.zeros(len(hlives)+1)
@@ -47,20 +48,44 @@ def decay_fun(x, y, hlives=half_lives):
     dydx[-1] = ln2/hlives[-2]*y[-2]
     return dydx
 
+#initial conditions and time interval
 y0 = np.zeros(15)
 y0[0] = 1 
 x0 = 0
 x1 = 4.46e9*365*24*60*60*10
+
+#evaluate system of ODEs with an implicit method
 ans = integrate.solve_ivp(decay_fun, (x0, x1), y0, method='Radau')
 
-
 plt.figure()
-plt.title('decays')
+plt.title('Uranium-238 decay chain vs. time')
 for i in range(15):
     plt.plot(ans.t /(365*24*60*60), ans.y[i, :], label = labels[i])
 plt.xlabel('t (years)')
 plt.ylabel('Amount of isotope (arb. units)')
 plt.legend()
+
+plt.figure()
+plt.title('Ratio of Pb206:U238 vs. time')
+plt.plot(ans.t /(365*24*60*60), ans.y[-1, :]/ans.y[0,:] )
+plt.xlabel('t (years)')
+plt.ylabel('Pb206:U238')
+
+#select a nicer time interval subset for the Th-230 : U-234 ratio
+s = 10 #start index of answer for plotting
+print('time (years)')
+print(ans.t[s:] / (365*24*60*60))
+print('ratio')
+print(ans.y[4, s:]/ans.y[3, s:])
+
+plt.figure()
+plt.title('Ratio of Th230:U234 vs. time')
+plt.plot(ans.t[s:] / (365*24*60*60), ans.y[4, s:]/ans.y[3, s:])
+plt.xlabel('t (years)')
+plt.ylabel('Pb206:U238')
+plt.semilogx()
 plt.show()
+
+
 
 

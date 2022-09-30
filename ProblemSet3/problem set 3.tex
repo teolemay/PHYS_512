@@ -97,18 +97,27 @@ where $\tau$ is the half-life. Using this description, the decay chain for urani
 	\dv{N_{Po210}}{t} &= \frac{\ln{2}}{\tau_{Bi210}}N_{Bi210} - \frac{\ln{2}}{\tau_{Po210}}N_{Bi210}\\
 	\dv{N_{Pb206}}{t} & = \frac{\ln{2}}{\tau_{Po210}}N_{Po210}
 \end{align}
-
+The values in the table of half-lives for the uranium-238 decay chain (in "integration.pdf" slides) were all converted to seconds and the system of differential equations was put together in a function called "decay\_fun" which takes an initial value array $y$ and returns an array of derivative values for each isotope by adding the half-life values to the equations above. The resulting system of differential equations was solved using SciPy's intial value problem ODE solver "scipy.integrate.solve\_ivp". For this type of problem, I forced the SciPy solver to use an implicit method since the chain decay is a stiff system of equations with a very large range of decay times. Figure 3 shows the progress of the decay chain over 10 uranium-238 half-lives. As expected, on this extremely long time scale, uranium-238 shows obvious exponential decay, and the amount of lead-206, the final product, increases until it reaches a steady state once there is approximately no remaining uranium-238.
 \begin{figure}[h]
-	\caption{Uranium-238 decay chain (From slides)}
+	\caption{Uranium-238 decay chain results}
 	\centering
-	\includegraphics[scale=1.5]{decaychain}
+	\includegraphics[scale=0.6]{fulldecaychain}
 \end{figure}
 
 \subsection{b)}
+Figure 4 shows the time evolution of the ratios of Pb-206 to U-238 and Th-230 to U-234. As expected, the ratio of the final product of the decay chain to U-238 looks exponential. This is to be expected as the half-life of U-238 is much greater than all other intermediate half-lives so the decay chain can be compared to one step over extremely long time intervals. The ratio of Th-230 to U-234 is more sensitive to smaller time scales. This is also expected since their half-lives are much closer to each other than that of U-238 to any member of the chain.
+\begin{figure}[h]
+	\caption{Ratios of Pb-206 to U-238 and Th-230 to U-234}
+	\centering
+	\includegraphics[scale=0.5]{leaduranium}
+	\includegraphics[scale=0.5]{thoriumuranium}
+\end{figure}
+\\
 
 
+\newpage
 \section{}
-
+something here
 \subsection{a)}
 
 \subsection{b)}
