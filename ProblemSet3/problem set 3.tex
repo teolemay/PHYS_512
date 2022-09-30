@@ -1,0 +1,76 @@
+\documentclass{article}
+
+%opening
+\title{PHYS 512 Problem Set 3}
+\author{Teophile Lemay, 281081252}
+\date{}
+\usepackage[left=2cm, right=2cm, top=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\newcommand{\<}[1]{\left\langle #1 \right\rangle }
+
+
+\begin{document}
+	\maketitle
+	
+\section{}
+The 4th order Runge-Kutta (RK4) method is a well defined algorithm for solving ODEs. For some first order ODE $\dv{y}{x} = f(x, y)$ and a step size $h$, RK4 is defined as
+\begin{align*}
+	k_1 &= h\cdot f(y, x)\\
+	k_2 &= h\cdot f(y + \frac{1}{2}k_1, x + \frac{1}{2}h)\\
+	k_3 &= h\cdot f(y + \frac{1}{2}k_2, x + \frac{1}{2}h)\\
+	k_4 &= h\cdot f(y + k_3, x+h)\\
+	y(x+h) &= y(x) + \frac{1}{6} (k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+This algorithm is implemented directly in my "rk4\_step" function which was used to evaluate
+\[ \dv{y}{x} = \frac{y}{1+x^2} \]
+as shown in figure 1.
+\begin{figure}[h]
+	\caption{basic RK4 integration of $\dv{y}{x} = \frac{y}{1+x^2}$}
+	\centering
+	\includegraphics[scale = 0.6]{basicrk4}
+\end{figure}\\
+\\
+Each of the RK4 terms after $k_1$ can be described as a second order Taylor expansion using the previous term.
+\begin{align*}
+	k_1 &= h\cdot f(y, x)\\
+	k_2 &= h\cdot f(y + \frac{1}{2}k_1, x + \frac{1}{2}h) = h\cdot \left(f(y, x) + \frac{1}{2}\dv{}{x}k_1\right)\\
+	 &= h\cdot \left(f(y, x) + \frac{h}{2}\dv{}{x}f(y,x)\right)
+	\\
+	k_3 &= h\cdot f(y + \frac{1}{2}k_2, x + \frac{1}{2}h) = h\cdot \left(f(y, x) + \frac{1}{2}\dv{}{x}k_2 \right)\\
+	 &= h\cdot \left(f(y, x) + \frac{h}{2}\dv{}{x} \left(f(y, x) + \frac{h}{2}\dv{}{x}f(y,x)\right) \right)\\
+	 &= h\cdot \left(f(y, x) + \frac{h}{2}\dv{}{x}f(y, x) + \frac{h^2}{4}\dv{}{x}f(y,x) \right)
+	\\
+	k_4 &= h\cdot f(y + k_3, x+h) = h\cdot \left(f(y,x) + \dv{}{x}k_3 \right)\\
+	 &= h\cdot \left(f(y,x) + h\dv{}{x}\left(f(y, x) + \frac{h}{2}\dv{}{x} \left(f(y, x) + \frac{h}{2}\dv{}{x}f(y,x)\right) \right) \right)\\
+	 &= h\cdot \left(f(y, x) + h\dv{}{x}f(y,x) + \frac{h^2}{2}\dv[2]{}{x}f(y,x) + \frac{h^3}{4}\dv[4]{}{x}f(y,x) \right)
+	 \\
+	y_{rk4}(x+h) &= y(x) + \frac{1}{6} (k_1 + 2k_2 + 2k_3 + k_4)
+\end{align*}
+Given the proper coefficients, RK4 is equivalent to a 4th order polynomial so
+\[y(x+h) = y_{rk4}(x+h) + \frac{h^5}{5!}\dv[4]{}{x}f(y,x) + \mathcal{O}(h^6)\]
+If the step size is reduced to $h/2$, repeating the second order expansion on $k_1'$, $k_2'$, $k_3'$, and $k_4'$ (' designates the $h/2$ step) produces
+\[y_{rk4}(x+h/2) = y(x) + \frac{1}{6} (k_1' + 2k_2' + 2k_3' + k_4')\]
+\[y(x+h/2) = y_{rk4}(x+h/2) + \left(\frac{h}{2}\right)^5 \dv[4]{}{x}f(y,x) + \mathcal{O}(h^6) \text{ .}\]
+A second $h/2$ step (') gives
+\[y_{rk4'}(x+h) = y(x+h/2) + \frac{1}{6} (k_1' + 2k_2' + 2k_3' + k_4')\]
+\[y(x+h) = y(x+h/2) + \frac{1}{6} (k_1' + 2k_2' + 2k_3' + k_4') + \left(\frac{h}{2}\right)^5 \dv[4]{}{x}f(y,x) + \mathcal{O}(h^6) \]
+\[y(x+h) = y_{rk4}(x+h/2) + \left(\frac{h}{2}\right)^5 \dv[4]{}{x}f(y,x) + \mathcal{O}(h^6) + \frac{1}{6} (k_1' + 2k_2' + 2k_3' + k_4') + \left(\frac{h}{2}\right)^5 \dv[4]{}{x}f(y,x) + \mathcal{O}(h^6) \text{ .} \]
+\[y(x+h) = y_{rk4}(x+h/2) + \frac{1}{6} (k_1' + 2k_2' + 2k_3' + k_4') + 2\left(\frac{h}{2}\right)^5 \dv[4]{}{x}f(y,x) + \mathcal{O}(h^6) \text{ .} \]
+Thus, the leading error term for $y(x+h)$ after 2 RK4 steps of $h/2$ is $\frac{h^5}{16}\dv[4]{}{x}f(y,x)$ compared to $h^5\dv[4]{}{x}f(y,x)$ for a single step of length $h$. Using this result, I can make use of both step lengths to eliminate the $5^{th}$ order error term.
+\[y_{h/2}(x+h) = y_{true}(x+h) - \frac{h^5}{16}\dv[4]{}{x}f(y,x) + \mathcal{O}(h^6)\]
+\[y_{h}(x+h) = y_{true}(x+h) - h^5\dv[4]{}{x}f(y,x) + \mathcal{O}(h^6)\]
+\[ \boxed{ \frac{16y_{h/2}(x+h) - y_h(x+h)}{15} = y(x+h) + \mathcal{O}(h^6) } \text{ .}\]
+
+
+
+ 
+
+
+
+
+\end{document}
