@@ -40,7 +40,7 @@ For any parameter guess $\vb{m}$ evaluating the gradient over an interval and co
 \[ \delta\vb{m} = (\grad{d(\vb{m})}^T \grad{d(\vb{m})})^{-1}\grad{d(\vb{m})}^T (\text{data} - d(\vb{m})) \]
 Where $N$ is a noise matrix which can be omitted by setting it to identity. Iterating Newton's method until the parameter update $\delta \vb{m}$ becomes smaller than some threshold gives the best fit parameters.\\
 \\
-Figure 1 shows the result of a Newton's method fit of the data in "sidebands.npz" to the Lorentzian using the analytical gradient derived above. The iterations were stopped once the magnitude of the parameter update $\delta m$ reached the threshold of $10^{-10}$ which took 13 steps. The best fit parameters for the Lorentzian are
+Figure 1 shows the result of a Newton's method fit of the data in "sidebands.npz" to the Lorentzian using the analytical gradient derived above. The iterations were stopped once the magnitude of the parameter update $\delta m$ reached the threshold of $10^{-10}$ which took 13 steps. The initial values were chosen by inspection of the data to be $(a=10, t_0=0.0002, w=0.0001)$. The best fit parameters for the Lorentzian are
 \[a = 1.423\]
 \[t_0 = 1.924 \cdot 10^{-4}\]
 \[w = 1.792 \cdot 10^{-5} \text{ .}\]
@@ -60,19 +60,31 @@ Obviously, $d-d_t = n$ is the noise in the data so
 Following the same steps as for linear least squares fitting, the covariance of the parameters $\<{(\delta m)^2}$ is 
 \[\<{(\delta m)^2} = (\grad A^T N^{-1} \grad A)^{-1} \]\\
 \\
-Figure 2 shows a histogram of the difference between the data and the model. Assuming the best fit parameters are close to $m_t$ this also describes the noise in the data. Since the noise is not centered at 0, I chose to estimate the noise at each data point as the root mean square of the difference between the model and the data. Thus, the resulting $N$ matrix is a diagonal matrix with all entries equal to $rms(\text{model} - \text{data})$.
+Figure 2 shows a histogram of the difference between the data and the model. Assuming the best fit parameters are close to $m_t$ this also describes the noise in the data. Since the noise is not centered at 0, I chose to estimate the noise at each data point as the root mean square of the difference between the model and the data. Thus, the resulting $N$ matrix is a diagonal matrix with all entries equal to $rms(\text{model} - \text{data})$. Evaluating the error in each parameter as the square roots of the diagonal elements of the covariance matrix gives error
+\[\sigma a = 2.678 \cdot 10^{-3}\]
+\[\sigma t_0 = 3.373 \cdot 10^{-8}\]
+\[\sigma w = 4.777 \cdot 10^{-8} \text{ .}\]
 \begin{figure}[h]
 	\caption{Noise distribution for analytical Lorentzian fit}
 	\centering
 	\includegraphics[scale=0.7]{singlenoise}
 \end{figure}
-\\
-Evaluating the error in each parameter as the square roots of the diagonal elements of the covariance matrix gives error
-\[\sigma a = 2.678 \cdot 10^{-3}\]
-\[\sigma t_0 = 3.373 \cdot 10^{-8}\]
-\[\sigma w = 4.777 \cdot 10^{-8} \text{ .}\]
 
-
+\subsection{c)}
+To fit the single Lorentzian model to the data using numerical derivatives, I use a central derivative to calculate partial derivatives with respect to each parameter which make up the gradient. The step size is not optimized for each numerical derivative. Generally, the ideal step size for a numerical central difference derivative of $f(x)$ is given by
+\[h \approx \left(\frac{\epsilon f(x)}{f'''(x)}\right)^{1/3} x\]
+where $\epsilon$ is the machine precision (Numerical Recipes, third edition). My implementation assumes that $f/f''' \approx 1$ which simplifies the step size choice to $h = (\epsilon)^{1/3}x$. As shown in figure 3, the numerical derivative fit of the model produces a very similar fit to the fit made using analytical derivatives. This suggests that the assumption made for step size choices did not introduce significant errors. The best fit parameters from the numerical Newton's method fit are
+\[a = 1.423\]
+\[t_0 = 1.924 \cdot 10^{-4}\]
+\[w = 1.972 \cdot 10^{-5} \text{ .}\]
+The best fit parameters from the analytical and numerical Newton's method fits are nearly identical. Taking the difference of the un-rounded values gives
+\[\delta a = 2.3 \cdot 10^{-12}, \ \ \delta t_0 = 9.1\cdot 10^{-16}, \ \ \delta w = 5.8 \cdot 10^{-17} .\]
+Since the numerical fit parameters fall well within the ranges of the uncertainties for the analytical fit parameters, the answers are not statistically different from each other.
+\begin{figure}[h]
+	\caption{Numerical derivative fit}
+	\centering
+	\includegraphics[scale=0.7]{numericalfit}
+\end{figure}
 
 
 \end{document}

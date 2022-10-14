@@ -44,6 +44,8 @@ while (mag > thresh) and (n_iter < 10000) :
 print(f'Threshold passed after {n_iter} steps')
 print(f'final parameters')
 print(p0)
+for p in p0:
+    print(p)
 
 noise = np.sqrt(np.mean( (d - pred)**2 ))
 # N is I * noise so N^-1 is I*(1/noise).
