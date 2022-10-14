@@ -64,6 +64,7 @@ Figure 2 shows a histogram of the difference between the data and the model. Ass
 \[\sigma a = 2.678 \cdot 10^{-3}\]
 \[\sigma t_0 = 3.373 \cdot 10^{-8}\]
 \[\sigma w = 4.777 \cdot 10^{-8} \text{ .}\]
+All code for parts a) and b) can be found in the file "Q1\_analytical\_lorentzian.py".
 \begin{figure}[h]
 	\caption{Noise distribution for analytical Lorentzian fit}
 	\centering
@@ -79,12 +80,37 @@ where $\epsilon$ is the machine precision (Numerical Recipes, third edition). My
 \[w = 1.972 \cdot 10^{-5} \text{ .}\]
 The best fit parameters from the analytical and numerical Newton's method fits are nearly identical. Taking the difference of the un-rounded values gives
 \[\delta a = 2.3 \cdot 10^{-12}, \ \ \delta t_0 = 9.1\cdot 10^{-16}, \ \ \delta w = 5.8 \cdot 10^{-17} .\]
-Since the numerical fit parameters fall well within the ranges of the uncertainties for the analytical fit parameters, the answers are not statistically different from each other.
+Since the numerical fit parameters fall well within the ranges of the uncertainties for the analytical fit parameters, the answers are not statistically different from each other. Code for part c) can be found in "Q1\_numerical\_lorentzian.py".
 \begin{figure}[h]
 	\caption{Numerical derivative fit}
 	\centering
 	\includegraphics[scale=0.7]{numericalfit}
 \end{figure}
 
+\subsection{d)}
+The numerical fit for the sum of three Lorentzians model was performed in the same way as for the single lorentzian model (figure 4) and error was estimated using the same procedure as used in part b). The best fit parameters for the triple Lorentzian model are
+\[a = 1.443 \pm 0.002\]
+\[t_0 = (1.9258 \pm 0.0003)\cdot 10^{-4}\]
+\[w = (1.607 \pm 0.005 ) \cdot 10^{-5} \]
+\[b = 0.104 \pm 0.002 \]
+\[c =  0.064 \pm 0.002\]
+\[dt = (4.45 \pm 0.03) \cdot 10^{-5}. \]
+\begin{figure}[h]
+	\caption{Triple Lorentzian numerical fit}
+	\centering
+	\includegraphics[scale=0.7]{triplelorentzian}
+\end{figure}
+
+\subsection{e)}
+Figure 5 shows the residuals for the triple Lorentzian model. Based on the figure, the noise is clearly correlated which breaks the assumptions used for the least-squares fit. Therefore, I do not believe that the model does not perfectly describe the data. In addition, the error estimation for the best fit parameters assumes uncorrelated Gaussian noise wit uniform variance. Figure 5 shows that this is clearly not the case, so the error bars are likely erroneous.
+\begin{figure}[h]
+	\caption{Triple Lorentzian residuals}
+	\centering{}
+	\includegraphics[scale=0.7]{residuals}
+\end{figure}
+
+\subsection{f)}
+
 
 \end{document}
+
