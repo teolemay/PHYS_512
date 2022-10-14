@@ -18,5 +18,57 @@
 \maketitle
 	
 \section{}
+\subsection{a)}
+Newton's method is a way to perform a non-linear least squares fit to some data by using the gradient of the model in parameter space to update the fit. Fitting the Lorentzian 
+\[d(t) = \frac{a}{1 + \frac{(t-t_0)^2}{w^2}}\] 
+requires the following derivatives:
+\[ \pdv{d}{a} = \frac{1}{1 + \frac{(t-t_0)^2}{w^2}} \]
+\[ \pdv{d}{t_0} = \frac{ \frac{2a(t-t_0)}{w^2} }{ \left( 1 + \frac{(t-t_0)^2}{w^2} \right)^2 } \]
+\[ \pdv{d}{w} = \frac{ \frac{2a(t-t_0)^2}{w^3} }{ \left( 1 + \frac{(t-t_0)^2}{w^2} \right)^2 } \]
+which make up the gradient of $d$ in parameter space:
+\[\grad{d} = 
+\begin{pmatrix}
+	\pdv{d}{a} \\\\
+	
+	\pdv{d}{t_0} \\\\
+	
+	\pdv{d}{w}
+\end{pmatrix}\]
+For any parameter guess $\vb{m}$ evaluating the gradient over an interval and comparing to the data, Newton's method gives a parameter update according to
+\[ \grad{d(\vb{m})}^T N^{-1} \grad{d(\vb{m})} \delta \vb{m} = \grad{d(\vb{m})}^T N^{-1} (\text{data} - d(\vb{m}))\]
+\[ \delta\vb{m} = (\grad{d(\vb{m})}^T N^{-1} \grad{d(\vb{m})})^{-1}\grad{d(\vb{m})}^T N^{-1} (\text{data} - d(\vb{m})) \]
+\[ \delta\vb{m} = (\grad{d(\vb{m})}^T \grad{d(\vb{m})})^{-1}\grad{d(\vb{m})}^T (\text{data} - d(\vb{m})) \]
+Where $N$ is a noise matrix which can be omitted by setting it to identity. Iterating Newton's method until the parameter update $\delta \vb{m}$ becomes smaller than some threshold gives the best fit parameters.\\
+\\
+Figure 1 shows the result of a Newton's method fit of the data in "sidebands.npz" to the Lorentzian using the analytical gradient derived above. The iterations were stopped once the magnitude of the parameter update $\delta m$ reached the threshold of $10^{-10}$ which took 13 steps.
+\begin{figure}[h]
+	\caption{Analytical Newton's method fit}
+	\centering
+	\includegraphics[scale=0.7]{analyticalfit}
+\end{figure}
+
+\subsection{b)}
+For non-linear least squares fitting, we know
+\[\grad A^T N^{-1}\grad A \delta m = \grad A^T N^{-1} (d - A(m))\]
+where $A$ is the model, $N$ is a diagonal matrix such that $N_{i,i} = \sigma^2_i$ (assuming random Gaussian noise in data), $d$ is the measurement data, and $m$ are model parameters. Setting $m \to m_t$ the "true" parameters such that $A(m_t) = d_t$ where $d_t$ is the noiseless data, the equation above can be rearranged to 
+\[\delta m = (\grad A^T N^{-1} \grad A)^{-1} \grad A^T N^{-1} (d-d_t) \text{ .}\]
+Obviously, $d-d_t = n$ is the noise in the data so
+\[\delta m = (\grad A^T N^{-1} \grad A)^{-1} \grad A^T N^{-1} n \]
+Following the same steps as for linear least squares fitting, the error in parameters $\<{(\delta m)^2}$ is 
+\[\<{(\delta m)^2} = (\grad A^T N^{-1} \grad A)^{-1} \]\\
+\\
+Figure 2 shows a histogram of the difference between the data and the model. Assuming the best fit parameters are close to $m_t$ this also describes the noise in the data. Since the noise is not centered at 0, I chose to estimate the noise at each data point as the root mean square of the difference between the model and the data. Thus, the resulting $N$ matrix is a diagonal matrix with all entries equal to $rms(\text{model} - \text{data})$.
+
+Since the model does not fit the data very well at all points, (e.g. figure 1 at $t\approx 0.00015$, and $t\approx 0.00025$), I chose to approximate the noise-free values of the data as the result of passing the data through a Gaussian filter. This assumes that the noise only makes up the high frequency oscillations in the data, and the filtered data passes approximately in the middle of the noise throughout the measured interval (Figure 2). \\
+\\
+
+\begin{figure}[h]
+	\caption{Noise distribution for analytical Lorentzian fit}
+	\centering
+	\includegraphics[scale=0.7]{singlenoise}
+\end{figure}
+\\
+
+
 
 \end{document}
