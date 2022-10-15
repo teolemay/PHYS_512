@@ -142,6 +142,7 @@ print('errors')
 for er in np.mean(np.std(chains, axis=1), axis=0):
     print(er)
 
+#alarm for long mcmc processes.
 import winsound
 duration = 1000  # milliseconds
 freq = 500  # Hz
