@@ -111,14 +111,6 @@ plt.xlabel('t')
 plt.xticks([0, 0.0001, 0.0002, 0.0003, 0.0004])
 plt.ylabel('d')
 plt.legend()
-
-plt.figure()
-plt.title('Triple Lorentzian fit residuals')
-plt.plot(t, d-pred)
-plt.plot(t, np.zeros(len(t)), 'r--')
-plt.xlabel('t')
-plt.ylabel('data - model')
-plt.xticks([0, 0.0001, 0.0002, 0.0003, 0.0004])
 plt.show()
 
 
