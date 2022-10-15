@@ -103,10 +103,63 @@ print('c error', errM[4])
 print('dt error', errM[5])
 
 
+#here we do mcmc
+def chisq(t, d, params):
+    y = triple_lorentzian([t] + [p for p in params])
+    return np.sum((d - y)**2)
+
+#now we can do mcmc from here.
+#code copied/adapted mcmc implementation in "PHYS512_modelling.pdf" slides
+nsteps = 100000
+nchains = 1
+
+chains = [None]*nchains
+for k in range(nchains):
+    chain = np.zeros((nsteps, len(p0)))
+    chain[0, :] = np.array([3, 0.0002, 0.00002, 0.5, 0.5, 0.0001])
+    chi = chisq(t, d, chain[0, :]) #set initial chisq to be kinda bad.
+    for j in range(1, nsteps):
+        newparams = chain[j-1, :] + np.random.randn(len(errM))*errM
+        chi_new = chisq(t, d, newparams)
+        if chi_new < chi:
+            chi = chi_new
+            chain[j, :] = newparams
+        else:
+            accept = np.exp(-0.5*(chi_new - chi))
+            if accept > np.random.rand():
+                chain[j, :] = newparams
+            else:
+                chain[j, :] = chain[j-1, :]
+        print(f'step {j}', end='\r')
+    chains[k] = chain
+
+print(" "*20, end='\r')
+
+for val in np.mean(np.mean(chains, axis=1), axis=0):
+    print(val)
+print()
+print('errors')
+for er in np.mean(np.std(chains, axis=1), axis=0):
+    print(er)
+
+import winsound
+duration = 1000  # milliseconds
+freq = 500  # Hz
+winsound.Beep(freq, duration)
+
+l = ['a', 't0', 'w', 'b', 'c', 'dt']
+plt.subplots(2, 3)
+for i in range(6):
+    plt.subplot(2, 3, i+1)
+    plt.title(l[i])
+    plt.plot(chains[0][:, i])
+plt.subplot_tool()
+plt.show()
+
 plt.figure()
-plt.title(r"Triple Lorentzian numerical derivative fit")
+plt.title(r"MCMC fit")
 plt.plot(t, d, label='Data')
-plt.plot(t, pred, label='Model')
+plt.plot(t, triple_lorentzian([t] + [p for p in np.mean(chains[0], axis=0)]), label='Model')
 plt.xlabel('t')
 plt.xticks([0, 0.0001, 0.0002, 0.0003, 0.0004])
 plt.ylabel('d')

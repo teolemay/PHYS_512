@@ -89,12 +89,20 @@ Since the numerical fit parameters fall well within the ranges of the uncertaint
 
 \subsection{d)}
 The numerical fit for the sum of three Lorentzians model was performed in the same way as for the single lorentzian model (figure 4) and error was estimated using the same procedure as used in part b). The best fit parameters for the triple Lorentzian model are
-\[a = 1.443 \pm 0.002\]
-\[t_0 = (1.9258 \pm 0.0003)\cdot 10^{-4}\]
-\[w = (1.607 \pm 0.005 ) \cdot 10^{-5} \]
-\[b = 0.104 \pm 0.002 \]
-\[c =  0.064 \pm 0.002\]
-\[dt = (4.45 \pm 0.03) \cdot 10^{-5}. \]
+\[a = 1.443\]
+\[t_0 = 1.926\cdot 10^{-4} \]
+\[w = 1.607\cdot 10^{-5}\]
+\[b = 0.1039\]
+\[c = 0.06473\]
+\[dt = 4.457\cdot 10^{-5} .\]
+The parameter errors for this fit are
+\[\sigma a = 0.00221\]
+\[\sigma t0 = 2.61 \cdot 10^{-8}\]
+\[\sigma w = 4.68 \cdot 10^{-8}\]
+\[\sigma b = 0.00210\]
+\[\sigma c = 0.00206\]
+\[\sigma dt = 3.15 \cdot 10^{-7}.\]
+Code for this part can be found in "Q1\_triple\_lorentzian.py".
 \begin{figure}[h]
 	\caption{Triple Lorentzian numerical fit}
 	\centering
@@ -102,7 +110,7 @@ The numerical fit for the sum of three Lorentzians model was performed in the sa
 \end{figure}
 
 \subsection{e)}
-Figure 5 shows the residuals for the triple Lorentzian model. Based on the figure, the noise is clearly correlated which breaks the assumptions used for the least-squares fit. Therefore, I do not believe that the model does not perfectly describe the data. In addition, the error estimation for the best fit parameters assumes uncorrelated Gaussian noise wit uniform variance. Figure 5 shows that this is clearly not the case, so the error bars are likely erroneous.
+Figure 5 shows the residuals for the triple Lorentzian model. Based on the figure, the noise is clearly correlated which breaks the assumptions used for the least-squares fit. Therefore, I do not believe that the model does not perfectly describe the data. In addition, the error estimation for the best fit parameters assumes uncorrelated Gaussian noise wit uniform variance. Figure 5 shows that this is clearly not the case, so the error bars for the parameters are likely erroneous.
 \begin{figure}[h]
 	\caption{Triple Lorentzian residuals}
 	\centering{}
@@ -110,7 +118,40 @@ Figure 5 shows the residuals for the triple Lorentzian model. Based on the figur
 \end{figure}
 
 \subsection{f)}
+I don't really have time to do this one unfortunately. I would love to understand it better though!
 
+\subsection{g)}
+I performed an MCMC fit of the model over 100000 steps. Figure 6 shows the evolutions of all 6 parameters for the triple Lorentzian model, and all parameters converge around their final value, albeit with non-uniformly random fluctuations at convergence. Figure 7 shows the result of the MCMC fit which has parameters 
+\[ a = 1.460\]
+\[ t_0 = 1.926\cdot 10^{-4}\]
+\[ w = 1.597\cdot 10^{-5}\]
+\[ b = 0.1143\]
+\[ c = 0.07192\]
+\[ dt = 4.449\cdot 10^{-5}\]
+with error
+\[ \sigma a = 0.171\]
+\[ \sigma t_0 = 7.03\cdot 10^{-7}\]
+\[ \sigma w = 1.06\cdot 10^{-6}\]
+\[ \sigma b = 0.0475\]
+\[ \sigma c = 0.0424\]
+\[ \sigma dt = 6.48\cdot 10^{-6}.\]
+The ranges of the Newton's method and the MCMC fit parameters with uncertainty overlap for all parameters, but the error estimates are much larger for the MCMC parameters with error bars increasing by a factor of 2 at least, and some by two order of magnitude.
+\begin{figure}[h]
+	\caption{MCMC parameter evolution}
+	\centering
+	\includegraphics[scale=0.5]{convergence}
+\end{figure}
+
+\begin{figure}[h]
+	\caption{Triple Lorentzian MCMC fit}
+	\centering
+	\includegraphics[scale=0.7]{mcmc}
+\end{figure}
+
+Code for this question can be found in "Q1\_mcmc.py"
+
+\subsection{e)}
+Couldn't wrap my head around this one on time either.
 
 \end{document}
 
