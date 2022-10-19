@@ -17,11 +17,53 @@
 \begin{document}
 \maketitle
 
-\section{}
 Data columns: The columns are 1) multipole
 (starting with the l=2 quadrupole), 2) the variance of the sky at that multipole, 3) the 1$\sigma$ lower uncertainty, and 4) the 1$\sigma$ upper uncertainty.\\
 \\
 Assume errors in data are Gaussian and uncorrelated.
+
+\section{}
+Running the provided code with the initial hard-coded parameters gives $\chi^2 = 15267.937150261654$. Given 2501  degrees of freedom, the fit for the initial values has a reduced $\chi^2_{r} = \frac{\chi^2}{n_{dof}} = 6.1047329669178945$. A good fit within uncertainty should produce $\chi^2_r \approx 1$, or $\chi^2 \approx n_{dof}$. The initial guesses produce $\chi^2 \approx 6n_{dof}$ which is more than 2 times the variance $\sigma^2_{\chi^2} = 2n_{dof}$ away from the mean so I do not believe that the initial guesses make a good fit to the data.\\
+\\
+Adjusting the values of the parameters to 
+\begin{align*}
+	H_0 &= 69\\
+	\Omega_b h^2 &= 0.022\\
+	\Omega_c h^2 &= 0.12\\
+	\tau &= 0.06\\
+	A_s &= 2.1e9\\
+	n_s &= 0.95
+\end{align*}
+produces a fit with $\chi^2 = 3272.2053559202204$. This gives a value of $\chi^2_r = 1.3083587988485488$. With the new parameters, $\chi^2$ for the fit is approximately equal to $n_{dof}$ so the new parameters are an acceptable fit.
+
+\section{}
+I used Newton's method with numerical derivatives to fit the parameters to the data. The model is calculated from the parameter using the \texttt{get\_spectrum} function defined in the example script "planck\_likelihood.py". The gradients in parameter space were computed using central differences for each parameter. Optimal step size for the central difference derivative is given by 
+\[dp = \left(\frac{\epsilon f}{f'''}\right)^{1/3}p\]
+where $\epsilon$ is machine precision. My function assumes that $f \approx f'''$ and uses step sizes $\dp = p \cdot \epsilon^{1/3}$. In order for Newton's method to converge, I also had to omit the first line in the dataset. This is an acceptable omission since the first two values of the model (monopole, and multipole 2) are omitted by \texttt{get\_spectrum}, and skipping the first data line corresponds to multipolr 2. Thus, both the model and data in use start at multipole 3.\\
+\\
+Parameter errors were calculated according to
+\[\<{(\Delta m) ^2} = \left(\grad A^T N^{-1} \grad A\right)^-1\]
+where $\grad{A}$ is the gradient of the model with respect to the parameters, and $N$ is a diagonal matrix containing the noise at each point in the data. Best fit parameters and error are saved to "planck\_ fit\_params.txt" with the data in the first column (ordered as $H_0, \Omega_b h^2, \Omega_c h^2, \tau, A_s, n_s$), and estimated error in the second column. \\
+\\
+The best fit parameters from Newton's method are
+\begin{align*}
+	H_0 &= 68.94 \pm 0.12\\
+	\Omega_b h^2 &= 0.022375 \pm 0.000025\\
+	\Omega_c h^2 &= 0.17398 \pm 0.00025\\
+	\tau &= 0.0522 \pm 0.0041\\
+	A_s &= (2.078 \pm 0.016) \cdot 10^{-9}\\
+	n_s &= 0.96849 \pm 0.00072
+\end{align*}
+which gives a fit with $\chi^2 = 2586.62$ for 2500 degrees of freedom. This is a good fit to the data.\\
+\\
+time permitting, vary value of dark matter density
+\section{}
+MCMC best fit parameters
+
+\section{}
+Run new MCMC with constrained parameters
+
+
 
 
 	

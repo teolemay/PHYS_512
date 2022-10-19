@@ -23,19 +23,22 @@ def get_spectrum(pars,lmax=3000):
     return tt[2:]
 
 
-pars=np.asarray([60,0.02,0.1,0.05,2.00e-9,1.0])
-planck=np.loadtxt('COM_PowerSpect_CMB-TT-full_R3.01.txt',skiprows=1)
+
+pars=np.asarray([60,0.02,0.1,0.05,2.00e-9,1.0]) #old parameters
+pars=np.asarray([69, 0.022, 0.12, 0.06, 2.1e-9, 0.95]) #new parameters
+planck=np.loadtxt('COM_PowerSpect_CMB-TT-full_R3.01.txt',skiprows=2)
 ell=planck[:,0]
 spec=planck[:,1]
-errs=0.5*(planck[:,2]+planck[:,3]);
+errs=0.5*(planck[:,2]+planck[:,3])
 model=get_spectrum(pars)
 model=model[:len(spec)]
 resid=spec-model
 chisq=np.sum( (resid/errs)**2)
 print("chisq is ",chisq," for ",len(resid)-len(pars)," degrees of freedom.")
+print("reduced chisq is ", chisq/(len(resid)-len(pars)) )
 #read in a binned version of the Planck PS for plotting purposes
 planck_binned=np.loadtxt('COM_PowerSpect_CMB-TT-binned_R3.01.txt',skiprows=1)
-errs_binned=0.5*(planck_binned[:,2]+planck_binned[:,3]);
+errs_binned=0.5*(planck_binned[:,2]+planck_binned[:,3])
 plt.clf()
 plt.plot(ell,model)
 plt.errorbar(planck_binned[:,0],planck_binned[:,1],errs_binned,fmt='.')
