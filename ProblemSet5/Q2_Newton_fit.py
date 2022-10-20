@@ -52,7 +52,7 @@ dp = np.zeros(p0.shape)
 print("running newton's method")
 
 #run newton's method:
-while (delta_chisq > 1.5):
+while (delta_chisq > 1):
     p0 = p0 + dp
     n_iter += 1
     pred, grad = newton_numerical(p0)
