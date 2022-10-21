@@ -23,13 +23,13 @@ params, perrs = np.loadtxt('planck_fit_params.txt', usecols=(0,1), unpack=True) 
 
 
 
-plt.figure()
-plt.plot(chain[:, 0])
-plt.title(r'MCMC $\chi^2$ over time')
-plt.xlabel('Iteration')
-plt.ylabel(r'$\chi^2$')
+# plt.figure()
+# plt.plot(chain[:, 0])
+# plt.title(r'MCMC $\chi^2$ over time')
+# plt.xlabel('Iteration')
+# plt.ylabel(r'$\chi^2$')
 
-#chains
+# #chains
 titles = [r'$H_0$', r'$\Omega_b h^2$', r'$\Omega_c h^2$', r'$\tau$', r'$A_s$', r'$n_s$']
 plt.subplots(2, 3)
 for i in range(6):
@@ -38,35 +38,21 @@ for i in range(6):
     plt.plot(chain[:, i+1])
     plt.xlabel('Iteration')
 plt.subplot_tool()
+
+
+s = 7000
+plt.subplots(2, 3)
+for i in range(6):
+    plt.subplot(2, 3, i+1)
+    ft = np.fft.rfft(chain[s:, i+1])
+    power = np.abs(ft)**2
+    freq = np.fft.rfftfreq(len(chain[s:, i+1]), )
+    plt.plot(freq, power, '.')
+    plt.semilogx()
+    plt.semilogy()
+    plt.title(titles[i])
+plt.subplot_tool()
 plt.show()
-
-#power spectra
-# titles = [r'$H_0$', r'$\Omega_b h^2$', r'$\Omega_c h^2$', r'$\tau$', r'$A_s$', r'$n_s$']
-# plt.subplots(2, 3)
-# for i in range(6):
-#     plt.subplot(2, 3, i+1)
-#     ft = np.fft.rfft(chain[:, i+1])
-#     power = ( np.abs(ft) )**2
-#     freqs = np.fft.fftfreq(len(chain))
-#     plt.title(titles[i])
-#     plt.plot(freqs[len(freqs)//2:], power[len(freqs)//2:])
-#     plt.semilogx()
-#     plt.xlabel('Iteration')
-# plt.subplot_tool()
-# plt.show()
-
-
-ft = np.fft.fft(chain[5000:10000, 2])
-ft = ft[:len(ft)//2]
-
-power = ( np.abs(ft)**2 )
-power = gaussian_filter(power, 1)
-
-plt.figure()
-plt.plot(chain[2000:, 1])
-plt.show()
-
-
 
 
 # print('parameters:')

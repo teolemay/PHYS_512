@@ -19,16 +19,16 @@ specerrs = 0.5*(planck[:,2]+planck[:,3])
 
 params, perrs = np.loadtxt('planck_fit_params.txt', usecols=(0,1), unpack=True) #use perrs to modulate step size.
 
-nsteps = 10000
+nsteps = 20000
 nchains = 1 #just doing 1 long chain.
 
 print('running mcmc ...')
 chain = np.zeros((nsteps, len(params)+1)) #first column for chi values.
-chain[0, 1:] = (1+0.5*np.random.rand(len(perrs))) * np.asarray([60,0.02,0.1,0.05,2.00e-9,1.0]) #start with some bad parameters
+chain[0, 1:] = (1 + 0.5*np.random.randn(len(perrs))) * np.asarray([60,0.02,0.1,0.05,2.00e-9,1.0]) #start with some bad parameters
 chi = getchisq(spectrum, specerrs, chain[0, 1:]) #set initial chisq to be kinda bad.
 chain[0, 0] = chi
 for j in range(1, nsteps):
-    newparams = chain[j-1, 1:] + 1.25*np.random.randn(len(perrs))*perrs
+    newparams = chain[j-1, 1:] + 1.5*np.random.randn(len(perrs))*perrs
     chi_new = getchisq(spectrum, specerrs, newparams)
 
     if chi_new < chi:
