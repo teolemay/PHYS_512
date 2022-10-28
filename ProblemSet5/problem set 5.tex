@@ -54,7 +54,7 @@ which gives a fit with $\chi^2 = 2586.62$ for 2500 degrees of freedom. This is a
 time permitting, vary value of dark matter density.
 
 \section{}
-Over multiple different iterations, the best results were from an MCMC running for 40000 steps, with changes for each parameter produced by a random number drawn from a Gaussian distribution centered at 0 with variance 1, multiplied by the estimated error of the Newton's method fit. As shown in figure 1, all parameters appear to stabilize after approximately 20000 steps, so only the second half of the chains was used to estimate parameters. 
+The starting guess for all MCMC tries was set equal to the poor initial values given in "planck\_likelihood.py". This was chosen as a sufficiently poor initial starting position to show that the MCMC did indeed evolve towards better values. Over multiple different iterations, the best results were from an MCMC running for 40000 steps, with changes for each parameter produced by a random number drawn from a Gaussian distribution centered at 0 with variance 1, multiplied by the estimated error of the Newton's method fit. As shown in figure 1, all parameters appear to stabilize after approximately 20000 steps, so only the second half of the chains was used to estimate parameters. 
 \begin{figure}[h]
 	\caption{MCMC chains}
 	\centering
@@ -72,7 +72,7 @@ While they remain near a fixed value, none of the parameters appear to converge 
 	\centering
 	\includegraphics[scale=0.55]{chisquare}
 \end{figure}
-Despite $\tau$ not converging near the expected value, the chains were still able to produce a good fit to the data with $\chi^2$ values around 2580 for 2501 degrees of freedom throughout most of the fit (figure 3 shows $\chi^2$ values for the last 20000 steps). Best fit parameters and uncertainty were calculated using the mean and standard deviation of the last 20 000 steps of the MCMC (see first print statement in figure !!!WHATEVER THE LAST NUMBER IS!!!).
+Despite $\tau$ not converging near the expected value, the chains were still able to produce a good fit to the data with $\chi^2$ values around 2580 for 2501 degrees of freedom throughout most of the fit (figure 3 shows $\chi^2$ values for the last 20000 steps). Best fit parameters and uncertainty were calculated using the mean and standard deviation of the last 20 000 steps of the MCMC (see print outputs in figure 6).
 \begin{align*}
 	H_0 &= 69.69 \pm 0.49  \\
 	\Omega_b h^2 &= 0.02245 \pm 0.00016 \\
@@ -89,13 +89,46 @@ Assuming the universe is flat: $\Omega_b + \Omega_c + \Omega_\Lambda=1$. Therefo
 Code for this question is shared between two python files. The MCMC chain was run from "Q3\_mcmc.py", and the chain evaluation, plots, and parameter estimations were performed using "eval\_mcmc.py". Both of these python scripts also rely on the \texttt{get\_spectrum} function in the provided "planck\_likelihood.py" file.
 
 \section{}
+A new MCMC chain was run, this time limiting $\tau$ to values within the range $[0.0540 - 0.0074; 0.0540 + 0.0074]$. This constraint was put in place by checking all potential steps to ensure $\tau$ did not leave its allowed range. If an illegal potential step was found, new random steps were made and verified until an allowed step was found. This constraint was added to the same 40000 step MCMC chain as used in question 3 in order to run the constrained chain (figure 4).\\
+\\
+\begin{figure}[h]
+	\caption{Constrained MCMC chains}
+	\centering
+	\includegraphics[scale=0.55]{conchains}
+\end{figure}
+Similarly to the plain MCMC chain, the constrained chains have more stable behaviour after approximately 20000 steps so the first half of the chains were discarded as burn-in. Unfortunately, as shown in the power spectra and corner plot in figure 5, the constrained chain does not fully converge. The power spectra for $\tau$ and $A_s$ have the characteristic flat left hand side shape, with an "knee bend" around 0.004. Looking at the chains in figure 4, the nice power spectrum for $\tau$ is clearly due to the bounds set up for the parameter since $\tau$ explores it's whole allowed range randomly, but does not converge to any smaller range. The chain for $A_s$ does look like that of a well converged parameter as suggested by its power spectrum. However, the relationship between $A_s$ and $\tau$ shown in the corner plot in figure 5 shows a very strong correlation between the two variables, so the apparent convergence of $A_s$ can be explained by the limited range of $\tau$. The power spectra of all the other parameters do not suggest good convergence as they have much less well defined flat sections on the left hand side with "knee bends" at best near 0.0007, same as for the unconstrained chain. The corner plot also shows strong correlations between multiple other parameters.\\
+\\
+Despite poor convergence, calculating parameters and their uncertainty from the mean values and standard deviations of the last 20000 steps in each chain (see print outputs in figure 7) produced another good fit to the data with $\chi^2 = 2572.73$. The constrained MCMC best fit parameters are
+\begin{align*}
+	H_0 &= 67.74 \pm 0.89  \\
+	\Omega_b h^2 &= 0.02222 \pm 0.00040 \\
+	\Omega_c h^2 &= 0.1194 \pm 0.0022 \\
+	\tau &= 0.0548 \pm 0.0038 \\
+	A_s &=  (2.096 \pm 0.023)\\
+	n_s &=  0.9695 \pm 0.0063 \text{ .}
+\end{align*}
+Unfortunately, I am not able to compare these results to the parameters derived by importance sampling of the unconstrained chain. Since $\tau$ does not stay anywhere near the constrained value for $\tau$, evaluating the model using all the unconstrained parameters except switching $\tau = 0.132 \to 0.054$ gives a very poor fit of the data with $\chi^2 = 18229.49$ for 2501 degrees of freedom. This value is too big to be incorporated into a weighted average with weights of the form 
+\[ w_i = e^{-0.5(\chi^2_i - chi^2_\tau)} \]
+since evaluating any of the weights numerically leads to overflow errors.
 
+\begin{figure}[h]
+	\caption{Constrained MCMC convergence: Power spectra and corner plot}
+	\centering
+	\includegraphics[scale=0.55]{conpower}
+	\includegraphics[scale=0.55]{concorner}
+\end{figure}
 
 
 \begin{figure}[h]
-	\caption{Misc. Code outputs}
+	\caption{MCMC chain evaluation output}
 	\centering
 	\includegraphics[scale=1]{mcmcevalprint}
+\end{figure}
+
+\begin{figure}[h]
+	\caption{Constrained MCMC chain evaluation output}
+	\centering
+	\includegraphics[scale=1]{constrainedmcmcevalprint}
 \end{figure}
 
 

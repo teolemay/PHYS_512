@@ -20,6 +20,7 @@ errs_binned=0.5*(planck_binned[:,2]+planck_binned[:,3])
 
 #load mcmc chain
 chain = np.loadtxt('planck_chain.txt')
+chain = np.loadtxt('planck_chain_tauprior.txt') #this line added to evaluate the constrained mcmc chain
 
 #show chain evolution
 start = 20000 #burn in removal index.
@@ -31,7 +32,6 @@ for i in range(6):
     plt.title(titles[i])
     plt.plot(chain[:, i+1])
     plt.xlabel('Iteration')
-plt.subplot_tool()
 
 # #show chain power spectrums
 plt.subplots(2, 3)
@@ -44,7 +44,6 @@ for i in range(6):
     plt.semilogx()
     plt.semilogy()
     plt.title(titles[i])
-plt.subplot_tool()
 
 #show chi squared over chain
 plt.figure()
@@ -118,8 +117,6 @@ print('chisq for mcmc with swapped tau: ', tau_chi)
 #     print(titles[i], val, '(+/-)', weighted_std_dev[i])
 # print()
 
-# #show plot of model with importance sampling parameters 
-# model = get_spectrum(p_weighted)
-# model = model[:len(spectrum)]
+# # model with importance sampling parameters 
 # print('chisq of importance sampling: ', getchisq(spectrum, specerrs, p_weighted))
 
