@@ -17,13 +17,8 @@
 \begin{document}
 \maketitle
 
-Data columns: The columns are 1) multipole
-(starting with the l=2 quadrupole), 2) the variance of the sky at that multipole, 3) the 1$\sigma$ lower uncertainty, and 4) the 1$\sigma$ upper uncertainty.\\
-\\
-Assume errors in data are Gaussian and uncorrelated.
-
 \section{}
-Running the provided code with the initial hard-coded parameters gives $\chi^2 = 15267.937150261654$. Given 2501  degrees of freedom, the fit for the initial values has a reduced $\chi^2_{r} = \frac{\chi^2}{n_{dof}} = 6.1047329669178945$. A good fit within uncertainty should produce $\chi^2_r \approx 1$, or $\chi^2 \approx n_{dof}$. The initial guesses produce $\chi^2 \approx 6n_{dof}$ which is more than 2 times the variance $\sigma^2_{\chi^2} = 2n_{dof}$ away from the mean so I do not believe that the initial guesses make a good fit to the data.\\
+Running the provided code with the initial hard-coded parameters gives $\chi^2 = 15267.937150261654$. Given 2501  degrees of freedom, the fit for the initial values has a reduced $\chi^2_{r} = \frac{\chi^2}{n_{dof}} = 6.1047329669178945$. A good fit within uncertainty should produce $\chi^2_r \approx 1$, or $\chi^2 \approx n_{dof}$. The initial guesses produce $\chi^2 \approx 6\cdot n_{dof}$ which is more than 2 times the variance $\sigma^2_{\chi^2} = 2n_{dof}$ away from the mean so I do not believe that the initial guesses make a good fit to the data.\\
 \\
 Adjusting the values of the parameters to 
 \begin{align*}
@@ -38,8 +33,8 @@ produces a fit with $\chi^2 = 3272.2053559202204$. This gives a value of $\chi^2
 
 \section{}
 I used Newton's method with numerical derivatives to fit the parameters to the data. The model is calculated from the parameter using the \texttt{get\_spectrum} function defined in the example script "planck\_likelihood.py". The gradients in parameter space were computed using central differences for each parameter. Optimal step size for the central difference derivative is given by 
-\[dp = \left(\frac{\epsilon f}{f'''}\right)^{1/3}p\]
-where $\epsilon$ is machine precision. My function assumes that $f \approx f'''$ and uses step sizes $\dp = p \cdot \epsilon^{1/3}$. In order for Newton's method to converge, I also had to omit the first line in the dataset. This is an acceptable omission since the first two values of the model (monopole, and multipole 2) are omitted by \texttt{get\_spectrum}, and skipping the first data line corresponds to multipolr 2. Thus, both the model and data in use start at multipole 3. The initial guesses for Newton's method were the poor fit parameters from the example code.\\
+\[dp = \left(\frac{\epsilon f}{f'''}\right)^{1/3} p\]
+where $\epsilon$ is machine precision. My function assumes that $ f \approx \dv[3]{f}{x}$ and uses step sizes $dp = p \cdot \epsilon^{1/3}$. In order for Newton's method to converge, I also had to omit the first line in the dataset. This is an acceptable omission since the first two values of the model (monopole, and multipole 2) are omitted by \texttt{get\_spectrum}, and skipping the first data line corresponds to multipole 2. Thus, both the model and data in use start at multipole 3. The initial guesses for Newton's method were the poor fit parameters from the example code.\\
 \\
 Parameter errors were calculated according to
 \[\<{(\Delta m) ^2} = \left(\grad A^T N^{-1} \grad A\right)^-1\]
@@ -59,13 +54,49 @@ which gives a fit with $\chi^2 = 2586.62$ for 2500 degrees of freedom. This is a
 time permitting, vary value of dark matter density.
 
 \section{}
-
-
+Over multiple different iterations, the best results were from an MCMC running for 40000 steps, with changes for each parameter produced by a random number drawn from a Gaussian distribution centered at 0 with variance 1, multiplied by the estimated error of the Newton's method fit. As shown in figure 1, all parameters appear to stabilize after approximately 20000 steps, so only the second half of the chains was used to estimate parameters. 
+\begin{figure}[h]
+	\caption{MCMC chains}
+	\centering
+	\includegraphics[scale=0.55]{fullchains}
+\end{figure}
+While they remain near a fixed value, none of the parameters appear to converge very well as all the chains contain some relatively large scale oscillations. The imperfect convergence of the chains is further shown by the power spectra and corner plot in figure 2. First, the power spectra do contain a flattened left-end, indicating convergence. However, the knee is located near 0.0007 giving an independent sample at approximately every 1400 steps. Over the more stable 20000 steps kept, this gives only 14 independent samples. Furthermore, the pairwise comparisons between parameter spreads shown in the corner plots do not show tight, uncorrelated convergences for each parameter. For example, $\tau$ and $A_s$ appear to have a strong positive correlation, and $H_0$ and $\Omega_c h^2$ have an apparent negative correlation. Given the appearances and behaviours of my chains, I do not believe that they are properly converged. This may be due to the fact that $\tau$ almost immediately jumps to around twice it's expected value and does not explore other regions in parameter space. Thus, with $\tau$ staying near a poor value, the other parameters are limited in their convergence to a best fit and may be able to vary more freely with less "steep" likelihood controls. 
+\begin{figure}[h]
+	\caption{MCMC convergence: Power spectra and corner plot}
+	\centering
+	\includegraphics[scale=0.55]{powerspectrum}
+	\includegraphics[scale=0.55]{cornerplot}
+\end{figure}
+\begin{figure}[h]
+	\caption{MCMC $\chi^2$ values over time}
+	\centering
+	\includegraphics[scale=0.55]{chisquare}
+\end{figure}
+Despite $\tau$ not converging near the expected value, the chains were still able to produce a good fit to the data with $\chi^2$ values around 2580 for 2501 degrees of freedom throughout most of the fit (figure 3 shows $\chi^2$ values for the last 20000 steps). Best fit parameters and uncertainty were calculated using the mean and standard deviation of the last 20 000 steps of the MCMC (see first print statement in figure !!!WHATEVER THE LAST NUMBER IS!!!).
+\begin{align*}
+	H_0 &= 69.69 \pm 0.49  \\
+	\Omega_b h^2 &= 0.02245 \pm 0.00016 \\
+	\Omega_c h^2 &= 0.1151 \pm 0.0012 \\
+	\tau &= 0.132 \pm 0.020 \\
+	A_s &=  (2.422 \pm 0.091)\\
+	n_s &=  0.9804 \pm 0.0037
+\end{align*}
+Comparing the CAMB model made using the MCMC parameters to the data gives $\chi^2 = 2571.45$ for 2501 degrees of freedom which is a slightly better fit than achieved with Newton's method.\\
+\\
+Assuming the universe is flat: $\Omega_b + \Omega_c + \Omega_\Lambda=1$. Therefore, the mean value of dark energy $\Omega_\Lambda$ can be estimated from my MCMC fit:
+\[\Omega_\Lambda = 1 - \Omega_b - \Omega_c = 1 - \frac{\Omega_b h^2}{h^2} - \frac{\Omega_c h^2}{h^2} = 1 - \frac{\Omega_b h^2}{(H_0/100)^2} - \frac{\Omega_c h^2}{(H_0/100)^2} \]
+\[\Omega_\Lambda \approx 0.7168 \pm 0.0043 \text{ .}\]
+Code for this question is shared between two python files. The MCMC chain was run from "Q3\_mcmc.py", and the chain evaluation, plots, and parameter estimations were performed using "eval\_mcmc.py". Both of these python scripts also rely on the \texttt{get\_spectrum} function in the provided "planck\_likelihood.py" file.
 
 \section{}
-Run new MCMC with constrained parameters
 
 
+
+\begin{figure}[h]
+	\caption{Misc. Code outputs}
+	\centering
+	\includegraphics[scale=1]{mcmcevalprint}
+\end{figure}
 
 
 	
