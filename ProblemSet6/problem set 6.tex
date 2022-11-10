@@ -32,7 +32,12 @@ which results in shifting the array. I implemented this in code using Numpy's \t
 \end{figure}
 
 \section{}
-
+My correlation function correlates two input arrays by taking the DFT for each and returning the inverse DFT of the product of the first transformed array with the conjugate of the second array, as per the definition of the correlation by Fourier transform. For simplicity, I only return the correlation for positive lengths. Figure 2 shows the autocorrelation (correlation with itself) of the same Gaussian as used in question 1. The code for this question is in \text{Q2\_correlation\_function.py}.
+\begin{figure}[h]
+	\caption{Correlation of a Gaussian with itself}
+	\centering
+	\includegraphics[scale=0.6]{autocorrelation}
+\end{figure}
 	
 	
 \end{document}
