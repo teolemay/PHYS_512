@@ -1,0 +1,39 @@
+\documentclass{article}
+
+%opening
+\title{PHYS 512 Problem Set 6}
+\author{Teophile Lemay, 281081252}
+\date{}
+\usepackage[left=2cm, right=2cm, top=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\newcommand{\<}[1]{\left\langle #1 \right\rangle }
+
+
+\begin{document}
+\maketitle
+
+\section{}
+A convolution of two functions $g$ and $h$ is defined as the operation
+\[(g * h)(t) = \int_{-\infty}^{\infty}d\tau g(t-\tau)h(\tau) \text{ .}\]
+A special case is the convolution with an impulse function $\delta(t-a)$, which is 1 at the impulse $t=a$ and 0 everywhere else.
+\[(f*\delta)(t) = \int_{-\infty}^{\infty}d\tau f(t-\tau)\delta(\tau-a)\]
+Obviously, this integral is equal to 0 everywhere except at $\tau= a$, so
+\[(f*\delta)(t) = \int_{-\infty}^{\infty}d\tau f(t-\tau)\delta(\tau-a) = f(t-a)\]
+which results in shifting the array. I implemented this in code using Numpy's \texttt{np.convolve} function to convolve an input array with an impulse function. Generally, array shifting functions assume periodic boundary conditions. In keeping with this, my code performs the convolution of the shifted impulse with the input array concatenated with itself. The second half of the convolution output is returned as the shifted array. Figure 1 shows the result of shifting an array containing a Gaussian by half its length. Code for this question is in \texttt{Q1\_convolution\_shift.py}.
+\begin{figure}[h]
+	\caption{Convolution shift of a Gaussian}
+	\centering
+	\includegraphics[scale=0.6]{convshift}
+\end{figure}
+
+\section{}
+
+	
+	
+\end{document}
+
