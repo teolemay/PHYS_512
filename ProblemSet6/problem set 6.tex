@@ -99,7 +99,30 @@ With Euler's formula,
 \[ = \frac{1}{2i}\left[ \frac{1 - (\cos(-2\pi k + aN) + i\sin(-2\pi k + aN) )}{1 - \left(\cos\left(\frac{-2\pi k}{N} + a\right) + i\sin\left(\frac{-2\pi k}{N} + a\right)\right)} - \frac{1 - (\cos(-2\pi k - aN) + i\sin(-2\pi k - aN) )}{1 - \left(\cos\left(\frac{-2\pi k}{N} - a\right) + i\sin\left(\frac{-2\pi k}{N} - a\right)\right)} \right] \text{ .} \]
 Trigonometric functions are periodic over $2\pi$ so the phase shifts of $-2\pi k$ in the denominator can be ignored.
 \[ \sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \sin{ax} = \frac{1}{2i}\left[ \frac{1 - (\cos(aN) + i\sin(aN))}{1 - \left(\cos\left(\frac{-2\pi k}{N} + a\right) + i\sin\left(\frac{-2\pi k}{N} + a\right)\right)} - \frac{1 - (\cos(aN) - i\sin(aN) )}{1 - \left(\cos\left(\frac{2\pi k}{N} + a\right) - i\sin\left(\frac{2\pi k}{N} + a\right)\right)} \right] \text{ .} \]
+I compared this result to the Numpy's FFT implementation on the function
+\[f(x) = \sin(0.1 x)\]
+evaluated over the integers from 0 to 1023 (inclusive). Figure 5 shows the real and imaginary parts of the difference of both transforms. The scale of the differences is on the order of $10^{-11}$ which is larger than machine precision but still an extremely close match between the FFT and the analytical DFT. Figure 6 shows the power spectrum of the sine wave (as computed from the analytical DFT). While it has a sharp peak, there is still some spectral leakage as the DFT is not able to perfectly capture the frequency of the function. Code for this question is in \texttt{Q4\_analytic\_DFT.py}.
 
+\begin{figure}[h]
+	\caption{Difference of Analytical DFT and FFT transforms}
+	\centering
+	\includegraphics[scale=0.45]{redif}
+	\includegraphics[scale=0.45]{imdif}
+\end{figure}
+\begin{figure}[h]
+	\caption{Non-integer sine wave power spectrum}
+	\centering
+	\includegraphics[scale=0.5]{power}
+\end{figure}
+
+\subsection{d)}
+I applied the Hann window to the same non-integer since function used in part c), and evaluated the FFT of the windowed and non-windowed function using Numpy's FFT function. As shown in figure 7, the peak of the power spectrum for the windowed function is narrower with much smaller "tails" on each side due to spectral leakage. Code for this question is in \texttt{Q4\_hann\_window.py}.
+
+\begin{figure}[h]
+	\caption{Power spectrums with and without windowing}
+	\centering
+	\includegraphics[scale=0.5]{window}
+\end{figure}	
 
 
 
