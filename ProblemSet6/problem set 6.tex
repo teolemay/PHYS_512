@@ -28,17 +28,83 @@ which results in shifting the array. I implemented this in code using Numpy's \t
 \begin{figure}[h]
 	\caption{Convolution shift of a Gaussian}
 	\centering
-	\includegraphics[scale=0.6]{convshift}
+	\includegraphics[scale=0.5]{convshift}
 \end{figure}
 
 \section{}
-My correlation function correlates two input arrays by taking the DFT for each and returning the inverse DFT of the product of the first transformed array with the conjugate of the second array, as per the definition of the correlation by Fourier transform. For simplicity, I only return the correlation for positive lengths. Figure 2 shows the autocorrelation (correlation with itself) of the same Gaussian as used in question 1. The code for this question is in \text{Q2\_correlation\_function.py}.
+\subsection{a)}
+My correlation function correlates two input arrays by taking the DFT for each and returning the inverse DFT of the product of the first transformed array with the conjugate of the second array, as per the definition of the correlation by Fourier transform. For simplicity, I only return the correlation for positive lengths. Figure 2 shows the autocorrelation (correlation with itself) of the same Gaussian as used in question 1. The code for this question is in \text{Q2a\_correlation\_function.py}.
 \begin{figure}[h]
 	\caption{Correlation of a Gaussian with itself}
 	\centering
-	\includegraphics[scale=0.6]{autocorrelation}
+	\includegraphics[scale=0.5]{autocorrelation}
 \end{figure}
-	
+
+\subsection{b}
+Figure 3 shows the correlation of the Gaussian with itself shifted by 20. Both operations were performed using the functions created in the parts above. As expected, the correlation function has a peak at $\tau=20$.
+\begin{figure}[h]
+	\caption{Correlation of Gaussian and shifted Gaussian}
+	\centering
+	\includegraphics[scale=0.5]{shiftcorrelation}
+\end{figure}
+
+\section{}
+In order to prevent the DFT correlation from including the effects of periodic boundary conditions, my function padds the input arrays with zeros on both sides before performing the convolution. After performing the correlation, only positive $\tau$ values from 0 to half the length of the arrays are returned. In order to compare this function with my 
+DFT correlation function from question 2, I performed the correlation of a Gaussian centered at the middle of an array with the same Gaussian shifted to the right. The top two plots in Figure 4 show the functions and the results of the correlations. In this case, there is a clear difference between both results, and the plain DFT correlation function shows high correlation for higher $\tau$ values that can only exist if both functions have periodic boundary conditions. In contrast, the bottom row of plots shows the functions with an added padding of zeros on both sides. This padding removes the effect of periodic boundary conditions for low $\tau$ values since the offset in the correlation does not reach high enough values for the periodic boundary conditions to have any effect. In this case, both the plain, and padded DFT correlation functions give the same output. From these results, I can conclude that my padded DFT correlation function is properly correlating its inputs while removing the periodic boundary condition effects of a DFT correlation. Code for this question can be found in \texttt{Q3\_non\_periodic.py}.
+\begin{figure}[h]
+	\caption{Comparing padded and non-padded DFT correlation functions}
+	\centering
+	\includegraphics[scale=0.45]{plainfun}
+	\includegraphics[scale=0.45]{plaincor}
+	\includegraphics[scale=0.45]{paddedfun}
+	\includegraphics[scale=0.45]{paddedcor}
+\end{figure}
+  
+\section{}
+\subsection{a)}
+W.T.S.
+\[\sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} = \frac{1- \exp(-2\pi ik)}{1- \exp(-2\pi i k / N)}\]
+Rewriting the LHS, this becomes the sum of a geometric series:
+\[\sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N}}\right)^x = \frac{1- \exp(-2\pi ik)}{1- \exp(-2\pi i k / N)} \text{ .}\]
+This sum has a known result:
+\[\sum_{k=0}^{n-1} r^k = \frac{1 - r^n}{1 - r} \]
+for $r \neq 1$. Therefore
+\[\sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N}}\right)^x = \frac{1- \exp(-2\pi ik/N)^N}{1- \exp(-2\pi i k / N)} = \frac{1- \exp(-2\pi ik)}{1- \exp(-2\pi i k / N)} \text{ .}\]
+
+\subsection{b)}
+In the limit $k \to 0$, the sum becomes
+\[\lim_{k\to 0} \sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N}}\right)^x = \sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i \cdot 0}{N}}\right)^x = \sum_{x=0}^{N-1} \left(1\right)^x \text{ .}\]
+The sum of a geometric series also has a known result for this case:
+\[sum_{k=0}^{n-1} r^k = n \ \ \text{ for } \ \ r=1 \text{ .}\]
+Therefore, in the case $k\to 0$, 
+\[ \sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N}}\right)^x = N \text{ .}\]\\
+\\
+If $k \neq 0$, but is also not an integer multiple of $N$, the sum of geometric series identity still holds so
+\[\sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N}}\right)^x = \frac{1- \exp(-2\pi ik/N)^N}{1- \exp(-2\pi i k / N)} = \frac{1- \exp(-2\pi ik)}{1- \exp(-2\pi i k / N)} \text{ .}\]
+The complex exponentials can be re-written according to Euler's formula to give
+\[\frac{1- \exp(-2\pi ik)}{1- \exp(-2\pi i k / N)} = 
+\frac{1 - (\cos(-2\pi k) + i\sin(-2\pi k))}{1 - \left(\cos\left(\frac{-2\pi k}{N}\right) + i\sin\left(\frac{-2\pi k}{N}\right)\right)}\]
+\[ = \frac{1 - (\cos(2\pi k) - i\sin(2\pi k))}{1 - \left(\cos\left(\frac{2\pi k}{N}\right) - i\sin\left(\frac{2\pi k}{N}\right)\right)} \text{ .}\]
+For integer $k$, $\sin(2\pi k) = 0$ and $\cos(2\pi k) = 1$ so the numerator is 0 for any integer $k$. Furthermore, if $k$ is not a multiple of N, then $\cos(2\pi k/N) < 1$ so the denominator is non-zero (and complex for $k \neq N/2$). Thus we have 
+\[\sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N}}\right)^x = \frac{0}{z} = 0\]
+where $z$ is some finite complex number.
+
+\subsection{c)}
+Using Euler's formula again, I can write a non-integer sine wave as 
+\[\sin{ax} = \frac{e^{iax} - e^{-iax}}{2i}\]
+where $a$ is not an integer multiple of $2\pi$. The DFT of this sine wave is 
+\[ \sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \sin{ax} = \sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \frac{e^{iax} - e^{-iax}}{2i} = \frac{1}{2i}\left[\sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N} + iax} - \sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N} - iax}\right] \]
+\[ = \frac{1}{2i}\left[ \sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k }{N} + ia}\right)^x - \sum_{x=0}^{N-1} \left(e^{\frac{-2\pi i k}{N} - ia}\right)^x \right] = \frac{1}{2i}\left[ \frac{1 - e^{-2\pi i k + iaN}}{1 - e^{\frac{-2\pi i k}{N} + ia}} - \frac{1 - e^{-2\pi i k - iaN}}{1 - e^{\frac{-2\pi i k}{N} - ia}} \right] \text{ .}\]
+With Euler's formula, 
+\[ = \frac{1}{2i}\left[ \frac{1 - (\cos(-2\pi k + aN) + i\sin(-2\pi k + aN) )}{1 - \left(\cos\left(\frac{-2\pi k}{N} + a\right) + i\sin\left(\frac{-2\pi k}{N} + a\right)\right)} - \frac{1 - (\cos(-2\pi k - aN) + i\sin(-2\pi k - aN) )}{1 - \left(\cos\left(\frac{-2\pi k}{N} - a\right) + i\sin\left(\frac{-2\pi k}{N} - a\right)\right)} \right] \text{ .} \]
+Trigonometric functions are periodic over $2\pi$ so the phase shifts of $-2\pi k$ in the denominator can be ignored.
+\[ \sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \sin{ax} = \frac{1}{2i}\left[ \frac{1 - (\cos(aN) + i\sin(aN))}{1 - \left(\cos\left(\frac{-2\pi k}{N} + a\right) + i\sin\left(\frac{-2\pi k}{N} + a\right)\right)} - \frac{1 - (\cos(aN) - i\sin(aN) )}{1 - \left(\cos\left(\frac{2\pi k}{N} + a\right) - i\sin\left(\frac{2\pi k}{N} + a\right)\right)} \right] \text{ .} \]
+
+
+
+
+
+
 	
 \end{document}
 
