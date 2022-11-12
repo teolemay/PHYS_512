@@ -116,13 +116,37 @@ evaluated over the integers from 0 to 1023 (inclusive). Figure 5 shows the real 
 \end{figure}
 
 \subsection{d)}
-I applied the Hann window to the same non-integer since function used in part c), and evaluated the FFT of the windowed and non-windowed function using Numpy's FFT function. As shown in figure 7, the peak of the power spectrum for the windowed function is narrower with much smaller "tails" on each side due to spectral leakage. Code for this question is in \texttt{Q4\_hann\_window.py}.
+I applied the Hann window to the same non-integer since function used in part c), and evaluated the FFT of the windowed and non-windowed function using Numpy's FFT function. As shown in figure 7, the peak of the power spectrum for the windowed function is narrower with smaller "tails" on each side indicating less spectral leakage. Code for this question is in \texttt{Q4\_hann\_window.py}.
 
 \begin{figure}[h]
 	\caption{Power spectrums with and without windowing}
 	\centering
 	\includegraphics[scale=0.5]{window}
 \end{figure}	
+
+\subsection{e)}
+Analytically, the DFT is 
+\[\sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \left(\frac{1}{2} - \frac{1}{2}\cos{\frac{2\pi x}{N}}\right)\]
+With Euler's formula, This is 
+\[ \sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \left(\frac{1}{2} - \frac{1}{4}\left(e^{\frac{2\pi i x}{N}}+e^{\frac{-2\pi ix}{N}}\right)\right) = \sum_{x=0}^{N-1} \frac{1}{2}e^{\frac{-2\pi i k x}{N}} - \frac{1}{4}e^{\frac{-2\pi i (k-1) x}{N} } - \frac{1}{4}e^{\frac{-2\pi i (k+1) x}{N}}\]
+Applying the sum of geometric series results, this gives
+\[\sum_{x=0}^{N-1} e^{\frac{-2\pi i k x}{N}} \left(\frac{1}{2} - \frac{1}{2}\cos{\frac{2\pi x}{N}}\right) = \frac{1}{2}\left(\frac{1 - e^{-2\pi i k}}{1 - e^{\frac{-2\pi i k}{N}}}\right) - \frac{1}{4}\left(\frac{1 - e^{-2\pi i (k-1)}}{1 - e^{\frac{-2\pi i (k-1)}{N}}}\right) - \frac{1}{4}\left(\frac{1 - e^{-2\pi i (k+1)}}{1 - e^{\frac{-2\pi i (k+1)}{N}}}\right)\text{ .}\]
+From part b), I know that each of the fractions is 0 for non-integer multiples of N, and equal to N for $k=0$ (or $k=N$ which is the same as $k=0$ under periodic boundary conditions). Therefore, for $k=0$, $k+1$ and $k-1$ are non-zero and not multiples of N, so only the first term is non-zero, giving
+\[DFT[k=0] = \frac{N}{2} \text{ .}\]
+For $k=1$, $k-1 = 0$ so only the second term contributes, so
+\[DFT[k=1] = \frac{N}{4}\text{ .}\]
+For all terms between $k=1$ and $k=N-1$, each term is 0 so 
+\[DFT[1<k<N-1] = 0 \text{ .}\]
+For $k = N-1$, $k+1 = N$ which is equivalent to zero, giving
+\[DFT[k=N-1] = \frac{N}{4}\]
+and finally, $k=N$ is equivalent to $k=0$ so
+\[DFT[k=N] = frac{N}{2} \text{ .}\]
+As expected, the DFT of the the Hann window is $[N/2, N/4, 0, ..., 0, N/4, N/2]$.\\
+\\
+The Fourier transform of the windowed function is equal to the convolution of the Fourier transform of the function with the Fourier transform of the window. Writing out the convolution for $D$, the raw Fourier transform, $H$, the Fourier transform of the Hann window, and $H$ the Fourier transform of the windowed function:
+\[W(k) = \sum_{\kappa=-N}^N D(k)H(k - \kappa) = \sum_{\kappa=-N}^N D(k-\kappa)H(k) = \sum_{\kappa=-N}^N D(k-\kappa)H(\kappa)\]
+Recall $H(k) = 0 \ \ \forall k \notin \{0, 1, N-1, N\}$, so
+\[\sum_{\kappa=-N}^N D(k-\kappa)H(\kappa) = D(k)H(0) + D(k-1)H(1) + D(k-(N-1))H(N-1) + D(k-N)H(N) \]
 
 
 
