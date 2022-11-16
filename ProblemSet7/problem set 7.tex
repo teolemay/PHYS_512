@@ -81,7 +81,7 @@ so $u$ is drawn from the uniform distribution on $[0,1]$. Between 0 and 1, $v(u)
 \[\ln{u} = -1\]
 \[u = \frac{1}{e}\]
 \[v\left(\frac{1}{e}\right) = \frac{2}{e}\]
-so $v$ is drawn from the uniform distribution on $[0, \frac{2}{e}]$. I used these results to produce $N = 100000$ random deviates from the exponential distribution using ROU sampling. Figure 3 shows that the histogram of the samples is a good match to the exponential distribution as expected. Code for this question is in \texttt{Q3\_ROU.py}
+so $v$ is drawn from the uniform distribution on $[0, \frac{2}{e}]$. I used these results to produce $N = 100000$ random deviates from the exponential distribution using ROU sampling. Figure 3 shows that the histogram of the samples is a good match to the exponential distribution as expected. The ROU method is also more efficient than rejection sampling with the Cauchy distribution, with an efficiency of $\approx 0.680$, using approximately twice the number of random points as the rejection method. Code for this question is in \texttt{Q3\_ROU.py}
 \begin{figure}[h]
 	\caption{ROU sampling method for exponential distribution}
 	\centering
