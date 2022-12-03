@@ -1,0 +1,117 @@
+\documentclass{article}
+
+%opening
+\title{PHYS 512: Problem Set 8}
+\author{Teophile Lemay}
+\date{}
+\usepackage[left=2cm, right=2cm, top=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{physics}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\newcommand{\<}[1]{\left\langle #1 \right\rangle }
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+\begin{document}
+\maketitle
+
+\section{Problem 1}
+WTS: for a function that obeys the CFL condition, the leapfrog integrator conserves energy.\\
+\\
+PF:\\
+The leapfrog integrator can be defined as 
+\[ \frac{f(t+ dt, x) - f(t-dt, x)}{2dt} = -v\frac{f(t, x+dx) - f(t, x-dx)}{2dx} \]
+and the CFL condition is 
+\[ a = v\frac{dt}{dx} < 1 \] which 
+Assuming that solution is of the form $f(t,x) = \xi^t e^{ikx}$ where $\xi$ is some complex function of $k$, which is stable for $|\xi|^2 \leq 1$, the leapfrog integrator gives
+\[ \frac{\xi^{t+dt} e^{ikx} - \xi^{t-dt} e^{ikx}}{2dt} = -v\frac{\xi^t e^{ik(x+dx)} - \xi^t e^{ik(x-dx)} }{2dx} \]
+\[ \xi^{t+dt} e^{ikx} - \xi^{t-dt} e^{ikx} = -\frac{vdt}{dx}\left(\xi^t e^{ik(x+dx)} - \xi^t e^{ik(x-dx)}\right)  \]
+\[ \xi^{t}\xi^{dt}e^{ikx} - \xi^{t}\xi^{-dt}e^{ikx} = -\frac{vdt}{dx}\left(\xi^t e^{ikx}e^{ikdx} - \xi^t e^{ikx}e^{-ikdx}\right)  \]
+\[ \xi^{t}e^{ikx}\left(\xi^{dt} - \xi^{-dt}\right) = -\frac{vdt}{dx}\xi^t e^{ikx}\left(e^{ikdx} - e^{-ikdx}\right)  \]
+\[ \left(\xi^{dt} - \xi^{-dt}\right) = -\frac{vdt}{dx}\left(e^{ikdx} - e^{-ikdx}\right)  \]
+The RHS can be simplified using the Euler identity for the sine function, giving 
+\[ \xi^{dt} - \xi^{-dt} = -\frac{vdt}{dx}2i\sin(kdx) \]
+Multiplying both sides by $\xi^{dt}$
+\[ \xi^{2dt} - 1 = -\frac{vdt}{dx}2i\xi^{dt}\sin(kdx) \]
+\[ \xi^{2dt} + \xi^{dt}\frac{vdt}{dx}2i\sin(kdx) -1 = 0 \]
+Without loss of generality, I set $dt = 1$, and solve for $\xi$
+\[ \xi^{2} + \xi\frac{vdt}{dx}2i\sin(kdx) -1 = 0 \]
+\[\xi = \frac{-\frac{vdt}{dx}2i\sin(kdx) \pm \sqrt{-4\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx) + 4}}{2}\]
+\[\xi = -\frac{vdt}{dx}i\sin(kdx) \pm \sqrt{1 -\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx)}\]
+If the CFL condition is obeyed, then the square root term is real and
+\[|\xi|^2 = \left(-\frac{vdt}{dx}i\sin(kdx) \pm \sqrt{1 -\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx)}\right)\left(\frac{vdt}{dx}i\sin(kdx) \pm \sqrt{1 -\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx)}\right) \]
+a simple rearrangement shows this is a difference of squares:
+\[|\xi|^2 = \left( \pm \sqrt{1 -\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx)} - \frac{vdt}{dx}i\sin(kdx) \right)\left(\pm \sqrt{1 -\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx)} + \frac{vdt}{dx}i\sin(kdx) \right) \]
+\[|\xi|^2 = \left( \left(1 -\frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx)\right) + \frac{v^2(dt)^2}{(dx)^2}\sin^2(kdx) \right) = 1\]
+Which satisfies the stability condition for the assumed form of the solution. Therefore, the leapfrog integrator conserves energy.
+
+\section{Problem 2}
+\subsection{a)}
+For $\epsilon_0 = 1$, the potential field for a point charge in 2 dimensions is
+\[V(\vb{r}) = -\frac{q}{2\pi}\ln{r}\hat{r}\]
+I use this to construct an initial guess for the V field at all points other than $V[0,0]$, with $q=1$.
+I solved Laplace's equation by relaxation, setting each point equal to the mean of it's neighbours, then re-scaling such that the potential at $[0,0]$ is equal to 1, starting from the initial log potential guess and iterating for 1000 steps.\\
+\\
+The resulting potentials for $V[1,0]$ and $V[2,0]$ are
+\begin{figure}[h]
+	\caption{Print statement for potentials}
+	\centering
+	\includegraphics[scale=2]{potentials}
+\end{figure}
+the sanity check potential $V[5,0]\approx -1.05$ is also appropriate.
+
+\subsection{b)}
+Following the conjugate gradient algorithm described in the notes, I solved the charge density in a square box with constant potential $V=1$. The system was set up as a 200 by 200 unit grid, with a square of side length 50 centered in the middle. The boundary conditions were set to have constant $V=1$ on the box sides and $V=0$ along the outside of the grid. \\
+\\
+I set the convergence threshold to be residuals squared $<10^{-20}$, and convergence was reached after 568 steps. Figure 2 shows the charge density along the top side of the box. As expected, the highest charge density is found at the corners of the box.
+\begin{figure}[h]
+	\caption{Charge density along top of box with constant $V$}
+	\centering
+	\includegraphics[scale=0.6]{density}
+\end{figure}
+
+\subsection{c)}
+To find the potential field over all space, I convolved the Green's function for Laplace's equation found in part a) with the charge density from part b). Figure 3 shows the potential field over the entire grid, as well as zoomed into the inside of the box. According to Gauss's law, inside the box, there should be a constant potential. This is not the case for my solution, though the maximum fluctuations inside the box are an order of magnitude smaller than the changes outside the box. The imperfections in the interior potential are likely due to the relatively large grid spacing used in this example.\\\\
+
+\begin{figure}[h]
+	\caption{Potential field around square box with constant $V$}
+	\centering
+	\includegraphics[scale=0.5]{everywhere}
+	\includegraphics[scale=0.5]{inside}
+\end{figure}
+Figure 4 shows a vector plot made using the $x$ and $y$ components of the gradient of the potential (the plot is down-sampled so that the arrows are more distinguishable). This plot confirms the expected shape of the potential field, with the largest changes in potential near the corners of the box where there is most charge density, and the arrows are everywhere approximately perpendicular to the closest side of the box. All code for question 2 can be found in \texttt{Q2\_laplace\_.py}.
+\begin{figure}[h]
+	\caption{Potential gradient vector field}
+	\centering
+	\includegraphics[scale=0.8]{gradient}
+\end{figure}
+	
+\end{document}
